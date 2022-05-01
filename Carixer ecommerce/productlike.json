@@ -1,0 +1,44 @@
+var jsonObject = {
+    "productslike" : [
+        {
+        "id": "productlike_1",
+        "title": "DISINFECTED SOLUTION",
+        "price": 300,
+        "image": "images/product1.png",
+        "rating": {
+        "rate": 3.9,
+        "count": 120
+        }
+        },
+        {
+        "id": "productlike_2",
+        "title": "DISINFECTED SOLUTION 2",
+        "price": 400,
+        "image": "images/product2.png",
+        "rating": {
+        "rate": 3.9,
+        "count": 20
+        }
+        },
+        {
+            "id": "productlike_3",
+            "title": "DISINFECTED SOLUTION",
+            "price": 300,
+            "image": "images/product1.png",
+            "rating": {
+            "rate": 3.9,
+            "count": 120
+            }
+            },
+            {
+            "id": "productlike_4",
+            "title": "DISINFECTED SOLUTION 2",
+            "price": 400,
+            "image": "images/product2.png",
+            "rating": {
+            "rate": 3.9,
+            "count": 20
+            }
+            },
+    ]
+}

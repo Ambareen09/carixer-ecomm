@@ -1,4 +1,3 @@
-import json
 from django.shortcuts import render
 
 # Create your views here.
@@ -30,3 +29,6 @@ def ordersdetail(request):
 
 def checkout(request):
     return render(request, 'checkout.html')
+
+def productdetail(request):
+    return render(request, 'productdetail.html')

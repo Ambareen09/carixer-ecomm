@@ -1,0 +1,64 @@
+var vasanth = {
+    "products" : [
+        {
+        "id": "product_1",
+        "title": "DISINFECTED SOLUTION",
+        "price": 300,
+        "image": "images/product1.png",
+        "rating": {
+        "rate": 3.9,
+        "count": 120
+        }
+        },
+        {
+        "id": "product_2",
+        "title": "DISINFECTED SOLUTION 2",
+        "price": 400,
+        "image": "images/product2.png",
+        "rating": {
+        "rate": 3.9,
+        "count": 20
+        }
+        },
+        {
+            "id": "product_3",
+            "title": "DISINFECTED SOLUTION",
+            "price": 300,
+            "image": "images/product1.png",
+            "rating": {
+            "rate": 3.9,
+            "count": 120
+            }
+            },
+            {
+            "id": "product_4",
+            "title": "DISINFECTED SOLUTION 2",
+            "price": 400,
+            "image": "images/product2.png",
+            "rating": {
+            "rate": 3.9,
+            "count": 20
+            }
+            },
+            {
+                "id": "product_5",
+                "title": "DISINFECTED SOLUTION",
+                "price": 300,
+                "image": "images/product1.png",
+                "rating": {
+                "rate": 3.9,
+                "count": 120
+                }
+                },
+                {
+                "id": "product_6",
+                "title": "DISINFECTED SOLUTION 2",
+                "price": 400,
+                "image": "images/product2.png",
+                "rating": {
+                "rate": 3.9,
+                "count": 20
+                }
+                },
+    ]
+}

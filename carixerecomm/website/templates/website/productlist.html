@@ -91,11 +91,12 @@
             <h6 class="card-title blue fw-bold">'{{p.title}}</h6>
             <p class="card-text blue fw-bold">₹ {{p.price}}</p>
             <p>
-              <span class="fa fa-star checked"></span>
-              <span class="fa fa-star checked"></span>
-              <span class="fa fa-star checked"></span>
-              <span class="fa fa-star"></span>
-              <span class="fa fa-star"></span>
+              {% for i in range(p.rating.rate|int)%}
+                <span class="fa fa-star checked"></span>
+              {% endfor %}
+              {% for i in range(5-p.rating.rate|int)%}
+                <span class="fa fa-star"></span>
+              {% endfor %}
               <span class="fw-normal"> {{p.rating.count}} reviews</span>
             </p>
           </div>

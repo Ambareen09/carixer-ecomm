@@ -1,7 +1,7 @@
+import json
 from django.shortcuts import render
-
-# Create your views here.
-
+from .serializers import ProductSerializer
+from .models import Product
 
 def index(request):
     return render(request, 'index.html')
@@ -12,69 +12,17 @@ def about(request):
 
 
 def productlist(request):
+    products = ProductSerializer().serialize(Product.objects.all(), fields=['title', 'price', 'image', 'reviews'])
+    products = [p['fields'] for p in json.loads(products)]
+    for p in products:
+        reviews = p['reviews']
+        count = len(reviews)
+        rates = [r['rate'] for r in reviews]
+        p['rating'] = {'count': count, 'rate': sum(rates)/max(1, count)}
+
     return render(request, 'productlist.html', {
-        "products" : [
-        {
-            "id": "product_1",
-            "title": "DISINFECTED SOLUTION",
-            "price": 300,
-            "image": "images/product1.png",
-            "rating": {
-            "rate": 3.9,
-            "count": 120
-        }
-        },
-        {
-            "id": "product_2",
-            "title": "DISINFECTED SOLUTION 2",
-            "price": 400,
-            "image": "images/product2.png",
-            "rating": {
-            "rate": 3.9,
-            "count": 20
-        }
-        },
-        {
-            "id": "product_3",
-            "title": "DISINFECTED SOLUTION",
-            "price": 300,
-            "image": "images/product1.png",
-            "rating": {
-            "rate": 3.9,
-            "count": 120
-        }
-        },
-        {
-            "id": "product_4",
-            "title": "DISINFECTED SOLUTION 2",
-            "price": 400,
-            "image": "images/product2.png",
-            "rating": {
-            "rate": 3.9,
-            "count": 20
-        }
-        },
-        {
-            "id": "product_5",
-            "title": "DISINFECTED SOLUTION",
-            "price": 300,
-            "image": "images/product1.png",
-            "rating": {
-            "rate": 3.9,
-            "count": 120
-        }
-        },
-            {
-            "id": "product_6",
-            "title": "DISINFECTED SOLUTION 2",
-            "price": 400,
-            "image": "images/product2.png",
-            "rating": {
-            "rate": 3.9,
-            "count": 20
-        }
-        },
-    ]})
+        "products" : products
+        })
 
 
 def waterless(request):

@@ -86,7 +86,7 @@
       <div class="mt-5 d-flex align-items-center flex-wrap" id="listproducts">
         {% for p in products%}
         <a style="text-decoration:none; color:#000;" href="productdetail.html" class="card border-light text-center me-3 list_card" id={{p.id}}>
-          <img src="static/{{p.image}}" class="card-img-top img">
+          <img src="static/images/{{p.image}}" class="card-img-top img">
           <div class="card-body">
             <h6 class="card-title blue fw-bold">'{{p.title}}</h6>
             <p class="card-text blue fw-bold">₹ {{p.price}}</p>

@@ -64,27 +64,28 @@
     </div>
   </div>
   <div class="container-xxl mt-5 mb-5">
+    {% for o in orders %}
     <div class="p-4 bg-white rounded-2 mb-4">
       <div class="d-flex justify-content-between align-items-center">
         <div>
-          <h5><i class="fas fa-circle status_delivery me-2" style="font-size: 14px;"></i>Delivered</h5>
-          <h6>10 Dec 2021</h6>
-          <h6>Order ID: AVHPV763436</h6>
+          <h5><i class="fas fa-circle status_{{o.status_color}} me-2" style="font-size: 14px;"></i>{{o.status}}</h5>
+          <h6>{{o.date}}</h6>
+          <h6>{{o.order_id}}</h6>
         </div>
         <div>
-          <h5>Disinfected Solution</h5>
-          <h6>Size: 1000ml</h6>
-          <h6>QTY: 10</h6>
+          <h5>{{o.title}}</h5>
+          <h6>Size: {{o.capacity}}</h6>
+          <h6>QTY: {{o.quantity}}</h6>
         </div>
         <div>
-          <span class="blue fs-5 fw-bold me-2">₹ 1500</span>
-          <del class="me-2">₹ 1000</del>
-          <span class="discount_per">SAVE 77%</span>
+          <span class="blue fs-5 fw-bold me-2">₹ {{o.totalPrice}}</span>
+          <del class="me-2">₹ {{o.save}}</del>
+          <span class="discount_per">SAVE {{o.percentSave}}%</span>
         </div>
         <div> <a href="/orderdetail" class="btn btn-blue">View Details</a></div>
       </div>
     </div>
-    <div class="p-4 bg-white rounded-2 mb-4">
+    <!-- <div class="p-4 bg-white rounded-2 mb-4">
       <div class="d-flex justify-content-between align-items-center">
         <div>
           <h5><i class="fas fa-circle status_cancel me-2" style="font-size: 14px;"></i>Cancelled</h5>
@@ -147,7 +148,8 @@
         </div>
         <div> <a href="/orderdetail" class="btn btn-blue">View Details</a></div>
       </div>
-    </div>
+    </div> -->
+    {% endfor %}
   </div>
   <div style="background-color: #0B3E64;">
     <div class="container-xxl text-white" style="padding-top: 100px; padding-bottom: 100px;">

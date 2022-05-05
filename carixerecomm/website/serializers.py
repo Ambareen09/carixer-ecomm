@@ -23,17 +23,20 @@ class ProductSerializer(Serializer):
                             self._current[field] = value
                     else:
                         try:
-                            self._current[field] = getattr(obj, field)()  # for model methods
+                            self._current[field] = getattr(
+                                obj, field)()  # for model methods
                             continue
                         except TypeError:
                             pass
                         try:
-                            self._current[field] = getattr(obj, field)  # for property methods
+                            self._current[field] = getattr(
+                                obj, field)  # for property methods
                             continue
                         except AttributeError:
                             pass
 
                 except AttributeError:
                     pass
-        self._current['reviews'] = [model_to_dict(review) for review in Review.objects.filter(product=getattr(obj, 'pk'))]
+        self._current['reviews'] = [model_to_dict(
+            review) for review in Review.objects.filter(product=getattr(obj, 'pk'))]
         super(ProductSerializer, self).end_object(obj)

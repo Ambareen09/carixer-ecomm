@@ -3,6 +3,12 @@ from django.contrib import admin
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 
+STATUS = {
+    ("DELIVERED", "DELIVERED"),
+    ("CANCELLED", "CANCELLED"),
+    ("ORDERED", "ORDERED"),
+}
+
 
 class BaseModel(models.Model):
     objects = models.Manager
@@ -19,6 +25,9 @@ class Product(BaseModel):
     image = models.FileField()
     # featured = models.BooleanField(default=False)
 
+    def __str__(self):
+        return str(self.title)
+
 
 class Review(BaseModel):
     rate = models.IntegerField(
@@ -28,18 +37,26 @@ class Review(BaseModel):
     comment = models.TextField()
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return str(self.rate)
+
 
 class OrderDetail(BaseModel):
-    status = models.CharField(max_length=255, null=True)
+    status = models.CharField(choices=STATUS, max_length=255, null=True)
     date = models.DateField(null=True)
     order_id = models.CharField(max_length=255, null=True)
-    capacity = models.IntegerField(null=True)
+    size = models.IntegerField(null=True)
     quantity = models.IntegerField(null=True)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, null=True, related_name="orderedProduct")
     address = models.TextField(null=True)
     short_description = models.TextField(null=True)
     long_description = models.TextField(null=True)
 
+    def __str__(self):
+        return str(self.status) + " | " + str(self.order_id)
+
 
 admin.site.register(Product)
 admin.site.register(Review)
+admin.site.register(OrderDetail)

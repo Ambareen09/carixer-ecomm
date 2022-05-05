@@ -3,8 +3,19 @@ from django.shortcuts import render
 from .serializers import ProductSerializer
 from .models import Product
 
+
 def index(request):
-    return render(request, 'index.html')
+    products = ProductSerializer().serialize(Product.objects.all(), fields=[
+        'title', 'price', 'image', 'reviews'])
+    products = [p['fields'] for p in json.loads(products)]
+    for p in products:
+        reviews = p['reviews']
+        count = len(reviews)
+        rates = [r['rate'] for r in reviews]
+        p['rating'] = {'count': count, 'rate': sum(rates)/max(1, count)}
+    return render(request, 'index.html', {
+        "products": products
+    })
 
 
 def about(request):
@@ -12,7 +23,8 @@ def about(request):
 
 
 def productlist(request):
-    products = ProductSerializer().serialize(Product.objects.all(), fields=['title', 'price', 'image', 'reviews'])
+    products = ProductSerializer().serialize(Product.objects.all(), fields=[
+        'title', 'price', 'image', 'reviews'])
     products = [p['fields'] for p in json.loads(products)]
     for p in products:
         reviews = p['reviews']
@@ -21,8 +33,8 @@ def productlist(request):
         p['rating'] = {'count': count, 'rate': sum(rates)/max(1, count)}
 
     return render(request, 'productlist.html', {
-        "products" : products
-        })
+        "products": products
+    })
 
 
 def waterless(request):
@@ -40,5 +52,17 @@ def ordersdetail(request):
 def checkout(request):
     return render(request, 'checkout.html')
 
+
 def productdetail(request):
-    return render(request, 'productdetail.html')
+    products = ProductSerializer().serialize(Product.objects.all().order_by('title')[:5], fields=[
+        'title', 'price', 'image', 'reviews'])
+    products = [p['fields'] for p in json.loads(products)]
+    for p in products:
+        reviews = p['reviews']
+        count = len(reviews)
+        rates = [r['rate'] for r in reviews]
+        p['rating'] = {'count': count, 'rate': sum(rates)/max(1, count)}
+
+    return render(request, 'productdetail.html', {
+        "products": products
+    })

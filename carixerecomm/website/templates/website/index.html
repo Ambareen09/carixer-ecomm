@@ -27,16 +27,16 @@
         <div class="collapse navbar-collapse" id="navbarScroll" style="width: 33.33%;">
           <ul class="navbar-nav my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 400px;">
             <li class="nav-item me-4">
-              <a class="nav-link" aria-current="page" href="/productlist.html">SHOP</a>
+              <a class="nav-link" aria-current="page" href="/productlist">SHOP</a>
             </li>
             <li class="nav-item me-4">
-              <a class="nav-link" href="about.html">ABOUT</a>
+              <a class="nav-link" href="about">ABOUT</a>
             </li>
             <li class="nav-item me-4">
-              <a class="nav-link" aria-current="page" href="/waterless.html">WATERLESS</a>
+              <a class="nav-link" aria-current="page" href="/waterless">WATERLESS</a>
             </li>
             <li class="nav-item me-4">
-              <a class="nav-link" href="/orders.html">MY ORDERS</a>
+              <a class="nav-link" href="/orders">MY ORDERS</a>
             </li>
           </ul>
         </div>
@@ -95,21 +95,29 @@
         <h5 class="second_heading">CARIXER PRODUCTS ARE SAFE, ECOFRIENTLY AND BIODEGRADABLE</h5>
       </div>
       <div class="mt-5 d-flex justify-content-between align-items-center flex-wrap">
-        <div class="card border-light text-center" style="max-width: 26rem;">
-          <img src="static/images/product1.png" class="card-img-top img" alt="...">
-          <div class="card-body ">
-            <h6 class="card-title blue fw-bold">DISINFECTED SOLUTION</h6>
-            <p class="card-text blue fw-bold">₹ 300</p>
-            <p><span class="fa fa-star checked"></span>
-              <span class="fa fa-star checked"></span>
-              <span class="fa fa-star checked"></span>
-              <span class="fa fa-star"></span>
-              <span class="fa fa-star"></span>
-              <span class="fw-normal">2 reviews</span>
-            </p>
+        {% for p in products%}
+        <a style="text-decoration:none; color:#000;" href="productdetail"
+          class="card border-light text-center me-3 list_card" id={{p.id}}>
+          <div class="card border-light text-center" style="max-width: 26rem;">
+
+            <img src="static/images/{{p.image}}" class="card-img-top img" alt="...">
+            <div class="card-body ">
+              <h6 class="card-title blue fw-bold">{{p.title}}</h6>
+              <p class="card-text blue fw-bold">₹ {{p.price}}</p>
+              <p>{% for i in range(p.rating.rate|int)%}
+                <span class="fa fa-star checked"></span>
+                {% endfor %}
+                {% for i in range(5-p.rating.rate|int)%}
+                <span class="fa fa-star"></span>
+                {% endfor %}
+                <span class="fw-normal">{{p.rating.count}} reviews</span>
+              </p>
+            </div>
+
           </div>
-        </div>
-        <div class="card border-light text-center" style="max-width: 26rem;">
+        </a>
+        {% endfor %}
+        <!-- <div class="card border-light text-center" style="max-width: 26rem;">
           <img src="static/images/product2.png" class="card-img-top img" alt="...">
           <div class="card-body ">
             <h6 class="card-title blue fw-bold">DISINFECTED SOLUTION</h6>
@@ -122,8 +130,8 @@
               <span class="fw-normal">2 reviews</span>
             </p>
           </div>
-        </div>
-        <div class="card border-light text-center" style="max-width: 26rem;">
+        </div> -->
+        <!-- <div class="card border-light text-center" style="max-width: 26rem;">
           <img src="static/images/product3.png" class="card-img-top img" alt="...">
           <div class="card-body ">
             <h6 class="card-title blue fw-bold">DISINFECTED SOLUTION</h6>
@@ -136,10 +144,11 @@
               <span class="fw-normal">2 reviews</span>
             </p>
           </div>
-        </div>
+        </div> -->
       </div>
       <div class="d-flex justify-content-center align-items-center mt-5">
-        <button type="button" class="btn btn-blue btn-md-lg">VIEW ALL PRODUCTS</button>
+        <a class="nav-link" aria-current="page" href="/productlist">
+          <button type="button" class="btn btn-blue btn-md-lg">VIEW ALL PRODUCTS</button> </a>
       </div>
     </div>
   </div>
@@ -173,30 +182,40 @@
       <div class="mt-5 d-flex justify-content-center align-items-center">
         <div class="swiper mySwiper">
           <div class="swiper-wrapper">
+            {% for p in products%}
             <div class="swiper-slide">
               <div class="card mb-3 border-light text-center" style="max-width: 800px;">
                 <div class="row g-0">
-                  <div class="col-md-8">
+                  <!-- <div class="col-md-8">
                     <img src="static/images/group_29686.png" class="img-fluid rounded-start" alt="...">
+                  </div> -->
+
+
+                  <div class="col-md">
+                    <a style="text-decoration:none; color:#000;" href="productdetail"
+                      class="card border-light text-center me-3 list_card" id={{p.id}}>
+                      <img src="static/images/{{p.image}}" class="card-img-top img">
+                      <div class="card-body">
+                        <h6 class="card-title blue fw-bold">'{{p.title}}</h6>
+                        <p class="card-text blue fw-bold">₹ {{p.price}}</p>
+                        <p>
+                          {% for i in range(p.rating.rate|int)%}
+                          <span class="fa fa-star checked"></span>
+                          {% endfor %}
+                          {% for i in range(5-p.rating.rate|int)%}
+                          <span class="fa fa-star"></span>
+                          {% endfor %}
+                          <span class="fw-normal"> {{p.rating.count}} reviews</span>
+                        </p>
+                      </div>
+                    </a>
+
                   </div>
-                  <div class="col-md-4">
-                    <div class="card-body">
-                      <img src="static/images/product1.png" class="img-fluid rounded-start" alt="...">
-                      <h6 class="card-title blue fw-bold">DISINFECTED SOLUTION</h6>
-                      <p class="card-text blue fw-bold">₹ 300</p>
-                      <p><span class="fa fa-star checked"></span>
-                        <span class="fa fa-star checked"></span>
-                        <span class="fa fa-star checked"></span>
-                        <span class="fa fa-star"></span>
-                        <span class="fa fa-star"></span>
-                        <span class="fw-normal">2 reviews</span>
-                      </p>
-                      <button type="button" class="btn btn-blue btn-md-lg">VIEW THIS PRODUCTS</button>
-                    </div>
-                  </div>
+
                 </div>
               </div>
             </div>
+            {% endfor %}
           </div>
           <div class="swiper-button-next"></div>
           <div class="swiper-button-prev"></div>
@@ -297,8 +316,12 @@
         <div class="col-md-8">
           <div class="row">
             <div class="col mb-4">
-              <h6>ABOUT</h6>
-              <div class="mb-2"><span>SHIPPING & RETURNS</span></div>
+              <a href="about" style="text-decoration: none;
+              color: white;">
+                <h6>ABOUT</h6>
+              </a>
+              <div class="mb-2"><a href="orders" style="text-decoration: none;
+                color: white;"><span>SHIPPING & RETURNS</span></a></div>
               <div class="mb-2"><span>BLOG</span></div>
               <div><span>CONTACT US</span></div>
             </div>
@@ -540,7 +563,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <a href="/checkout.html" class="btn btn-blue w-100">CHECK OUT</a>
+          <a href="/checkout" class="btn btn-blue w-100">CHECK OUT</a>
         </div>
       </div>
     </div>

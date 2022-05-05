@@ -32,13 +32,13 @@
               <a class="nav-link active" aria-current="page" href="#">SHOP</a>
             </li>
             <li class="nav-item me-4">
-              <a class="nav-link" href="/about.html">ABOUT</a>
+              <a class="nav-link" href="/about">ABOUT</a>
             </li>
             <li class="nav-item me-4">
-              <a class="nav-link" aria-current="page" href="/waterless.html">WATERLESS</a>
+              <a class="nav-link" aria-current="page" href="/waterless">WATERLESS</a>
             </li>
             <li class="nav-item me-4">
-              <a class="nav-link" href="/orders.html">MY ORDERS</a>
+              <a class="nav-link" href="/orders">MY ORDERS</a>
             </li>
           </ul>
         </div>
@@ -46,7 +46,7 @@
           aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="/index.html" style="display: flex; justify-content: center;width: 33.33%;">
+        <a class="navbar-brand" href="/index" style="display: flex; justify-content: center;width: 33.33%;">
           <img src="static/images/logo__1_.png" alt="" width="100">
         </a>
         <div style="display: flex; justify-content: flex-end;width: 33.33%;">
@@ -85,23 +85,24 @@
     <div>
       <div class="mt-5 d-flex align-items-center flex-wrap" id="listproducts">
         {% for p in products%}
-        <a style="text-decoration:none; color:#000;" href="productdetail.html" class="card border-light text-center me-3 list_card" id={{p.id}}>
+        <a style="text-decoration:none; color:#000;" href="productdetail"
+          class="card border-light text-center me-3 list_card" id={{p.id}}>
           <img src="static/images/{{p.image}}" class="card-img-top img">
           <div class="card-body">
             <h6 class="card-title blue fw-bold">'{{p.title}}</h6>
             <p class="card-text blue fw-bold">₹ {{p.price}}</p>
             <p>
               {% for i in range(p.rating.rate|int)%}
-                <span class="fa fa-star checked"></span>
+              <span class="fa fa-star checked"></span>
               {% endfor %}
               {% for i in range(5-p.rating.rate|int)%}
-                <span class="fa fa-star"></span>
+              <span class="fa fa-star"></span>
               {% endfor %}
               <span class="fw-normal"> {{p.rating.count}} reviews</span>
             </p>
           </div>
         </a>
-	      {% endfor %}
+        {% endfor %}
       </div>
     </div>
   </div>
@@ -360,7 +361,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <a href="/checkout.html" class="btn btn-blue w-100">CHECK OUT</a>
+          <a href="/checkout" class="btn btn-blue w-100">CHECK OUT</a>
         </div>
       </div>
     </div>

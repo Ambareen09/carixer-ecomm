@@ -116,7 +116,27 @@
     <div class="p-md-5" style="width: 50%; height: 100%;">
       <div class="w-75">
         <div>
+          {% for c in cartItems %}
           <div class="d-flex justify-content-between align-items-center">
+            <div class="card border-0 mb-3" style="max-width: 540px;">
+              <div class="row g-0">
+                <div class="col-md-4">
+                  <img src="static/images/{{c.image}}" class="img-fluid rounded" width="110" alt="...">
+                </div>
+                <div class="col-md-8">
+                  <div class="card-body">
+                    <h5 class="card-title">{{c.title}}</h5>
+                    <p class="card-text">QTY: {{c.quantity}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h5 class="blue">₹ {{c.totalPrice}}</h5>
+            </div>
+          </div>
+          {% endfor %}
+          <!-- <div class="d-flex justify-content-between align-items-center">
             <div class="card border-0 mb-3" style="max-width: 540px;">
               <div class="row g-0">
                 <div class="col-md-4">
@@ -133,31 +153,13 @@
             <div>
               <h5 class="blue">₹ 500</h5>
             </div>
-          </div>
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="card border-0 mb-3" style="max-width: 540px;">
-              <div class="row g-0">
-                <div class="col-md-4">
-                  <img src="static/images/product1.png" class="img-fluid rounded" width="110" alt="...">
-                </div>
-                <div class="col-md-8">
-                  <div class="card-body">
-                    <h5 class="card-title">Disinfected Solution</h5>
-                    <p class="card-text">QTY: 05</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div>
-              <h5 class="blue">₹ 500</h5>
-            </div>
-          </div>
+          </div> -->
         </div>
         <hr>
         <div>
           <div class="d-flex justify-content-between align-items-center mt-4">
             <h5>Sub Total</h5>
-            <h5>₹ 500</h5>
+            <h5>₹ {{cart.grandTotal}}</h5>
           </div>
           <div class="d-flex justify-content-between align-items-center mt-3">
             <h5>Shipping</h5>
@@ -168,7 +170,7 @@
         <div>
           <div class="d-flex justify-content-between align-items-center mt-4">
             <h5>Total</h5>
-            <h5>₹ 500</h5>
+            <h5>₹ {{cart.grandTotal}}</h5>
           </div>
         </div>
       </div>

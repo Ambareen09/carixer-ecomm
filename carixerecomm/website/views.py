@@ -8,13 +8,44 @@ from .serializers import ProductSerializer
 from .models import Product, OrderDetail, About
 
 
+def cartItems(request):
+    cart = list(OrderDetail.objects.filter(status="INCART").values())
+    for o in cart:
+        product = list(Product.objects.filter(id=o['product_id']).values())
+        for p in product:
+            o['title'] = p['title']
+            o['image'] = p['image']
+            o['totalPrice'] = o['quantity']*p['price']
+            o['save'] = o['totalPrice'] + 0.5*o['totalPrice']
+        o['percentSave'] = 50
+        temp = (o['status'])
+        o['status_color'] = ""
+        match temp:
+            case "DELIVERED":
+                o['status_color'] = "delivery"
+            case "ORDERED":
+                o['status_color'] = "order"
+            case "CANCELLED":
+                o['status_color'] = "cancel"
+            case default:
+                o['status_color'] = "cancel"
+    return cart
+
+
+def cart(cartItems):
+    cartList = {'grandTotal': 0}
+    print(cartItems)
+    for c in cartItems:
+        cartList['grandTotal'] += c['totalPrice']
+    return cartList
+
+
 def index(request):
     about = list(About.objects.values())
     products = ProductSerializer().serialize(Product.objects.all(), fields=[
         'id',  'title', 'price', 'image', 'featured', 'short_description', 'long_description', 'reviews'])
     products = [p['fields'] for p in json.loads(products)]
     for p in products:
-        p['id'] = id
         reviews = p['reviews']
         count = len(reviews)
         rates = [r['rate'] for r in reviews]
@@ -49,9 +80,54 @@ def waterless(request):
 
 
 def orders(request):
-    orders = list(OrderDetail.objects.values())
+    orders = list(OrderDetail.objects.exclude(status="INCART").values())
+    cart = list(OrderDetail.objects.filter(status="INCART").values())
     for o in orders:
-        product = list(Product.objects.values())
+        product = list(Product.objects.filter(id=o['product_id']).values())
+        for p in product:
+            o['title'] = p['title']
+            o['totalPrice'] = o['quantity']*p['price']
+            o['save'] = o['totalPrice'] + 0.5*o['totalPrice']
+        o['percentSave'] = 50
+        temp = (o['status'])
+        o['status_color'] = ""
+        match temp:
+            case "DELIVERED":
+                o['status_color'] = "delivery"
+            case "ORDERED":
+                o['status_color'] = "order"
+            case "CANCELLED":
+                o['status_color'] = "cancel"
+            case default:
+                o['status_color'] = "cancel"
+    for o in cart:
+        product = list(Product.objects.filter(id=o['product_id']).values())
+        for p in product:
+            o['title'] = p['title']
+            o['image'] = p['image']
+            o['totalPrice'] = o['quantity']*p['price']
+            o['save'] = o['totalPrice'] + 0.5*o['totalPrice']
+        o['percentSave'] = 50
+        temp = (o['status'])
+        o['status_color'] = ""
+        match temp:
+            case "DELIVERED":
+                o['status_color'] = "delivery"
+            case "ORDERED":
+                o['status_color'] = "order"
+            case "CANCELLED":
+                o['status_color'] = "cancel"
+            case default:
+                o['status_color'] = "cancel"
+    print(cart)
+
+    return render(request, 'orders.html', {"orders": orders, "cart": cart})
+
+
+def ordersdetail(request, id):
+    orders = list(OrderDetail.objects.filter(id=id).values())
+    for o in orders:
+        product = list(Product.objects.filter(id=o['product_id']).values())
         for p in product:
             o['title'] = p['title']
             o['totalPrice'] = o['quantity']*p['price']
@@ -69,27 +145,38 @@ def orders(request):
             case default:
                 o['status_color'] = "cancel"
         print(o['status_color'])
-    return render(request, 'orders.html', {"orders": orders})
-
-
-def ordersdetail(request):
-    return render(request, 'orderdetail.html')
+        o['transit'] = o['transit'].split(",")
+        print(o['transit'])
+    return render(request, 'orderdetail.html', {"orders": orders})
 
 
 def checkout(request):
-    return render(request, 'checkout.html')
+    cartItem = cartItems(request)
+    carts = cart(cartItem)
+    print(carts)
+
+    return render(request, 'checkout.html', {"cartItems": cartItem, "cart": carts})
 
 
 def productdetail(request, id):
-    products = ProductSerializer().serialize(Product.objects.filter(pk=id).order_by('title')[:5], fields=[
+    product = ProductSerializer().serialize(Product.objects.filter(pk=id), fields=[
         'title', 'price', 'image', 'featured', 'short_description', 'long_description', 'reviews'])
-    products = [p['fields'] for p in json.loads(products)]
-    for p in products:
+    suggestions = ProductSerializer().serialize(Product.objects.all(), fields=[
+        'id',   'title', 'price', 'image', 'featured', 'short_description', 'long_description', 'reviews'])
+    product = [p['fields'] for p in json.loads(product)]
+    suggestions = [p['fields'] for p in json.loads(suggestions)]
+    for p in product:
+        reviews = p['reviews']
+        count = len(reviews)
+        rates = [r['rate'] for r in reviews]
+        p['rating'] = {'count': count, 'rate': sum(rates)/max(1, count)}
+
+    for p in suggestions:
         reviews = p['reviews']
         count = len(reviews)
         rates = [r['rate'] for r in reviews]
         p['rating'] = {'count': count, 'rate': sum(rates)/max(1, count)}
 
     return render(request, 'productdetail.html', {
-        "products": products
+        "p": product[0], "suggestions": suggestions
     })

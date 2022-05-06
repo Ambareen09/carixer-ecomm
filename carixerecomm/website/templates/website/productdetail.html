@@ -65,29 +65,27 @@
       </div>
     </nav>
   </div>
+  {% for p in products %}
+  <!-- {{p}} -->
   <div class="product_list container-xxl">
     <div class="d-flex justify-content-between align-items-center">
       <div class="w-50">
-        <img src="static/images/product1.png" width="90%" alt="" />
+        <img src="static/images/{{p.image}}" width="90%" alt="" />
       </div>
       <div class="w-50">
-        <h3 class="blue fw-bold mb-3">DISINFECTED SOLUTION</h3>
+        <h3 class="blue fw-bold mb-3">{{p.title}}</h3>
         <p>
+          {% for i in range(p.rating.rate|int)%}
           <span class="fa fa-star checked"></span>
-          <span class="fa fa-star checked"></span>
-          <span class="fa fa-star checked"></span>
+          {% endfor %}
+          {% for i in range(5-p.rating.rate|int)%}
           <span class="fa fa-star"></span>
-          <span class="fa fa-star"></span>
-          <span class="fw-normal"> 2 reviews</span>
+          {% endfor %}
+          <span class="fw-normal"> {{p.rating.count}} reviews</span>
         </p>
         <hr />
         <p class="desc_para">
-          Our product is safe, ecofriendly, biodegradable alternative to using
-          soap and water. It protects the surface of the car from sun, rain
-          and dust by active formation of Protective layer. Water resistance
-          in glass surface (Driving in rainy condition) It gives you long
-          lasting shine and quick cleaning with protection from exterior
-          particles.
+          {{p.short_description}}
         </p>
         <div class="d-flex justify-content-between align-items-center mt-5">
           <div class="w-50">
@@ -99,7 +97,7 @@
             </select>
           </div>
           <div class="w-50 ms-4">
-            <h3 class="fw-bold">$500</h3>
+            <h3 class="fw-bold">${{p.price}}</h3>
           </div>
         </div>
         <div class="d-flex justify-content-between align-items-center mt-5 w-75">
@@ -127,7 +125,7 @@
       </div>
     </div>
     <div class="mt-5">
-      <p class="desc_para">
+      <!-- <p class="desc_para">
         Carixer Waterless car wash is a concentrated liquid that is diluted with 20-25 parts of water with the ability
         to soften and extract rapidly (with the aid of microfiber towel) sludge's, insects, stains and any dirt from the
         road surfaces of cars.
@@ -148,9 +146,11 @@
         product later store it for future use. 20 Litre of Waterless car wash concentrate can clean up to 1260 – 1300
         cars. Avail our products consisting of world-class quality and be stress-free.
       </p>
-      </p>
+      </p> -->
+      {{p.long_description}}
     </div>
   </div>
+  {% endfor %}
   <div class="mt-5">
     <div class="d-flex justify-content-center align-items-center flex-column">
       <h6 class="second_heading">YOU MAY ALSO LIKE</h6>

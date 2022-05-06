@@ -1,33 +1,37 @@
 from email.policy import default
 import json
+from tkinter.tix import Form
 from django.forms import model_to_dict
 from django.shortcuts import render
 from django.core.serializers import serialize
 from .serializers import ProductSerializer
-from .models import Product, OrderDetail
+from .models import Product, OrderDetail, About
 
 
 def index(request):
+    about = list(About.objects.values())
     products = ProductSerializer().serialize(Product.objects.all(), fields=[
-        'title', 'price', 'image', 'reviews'])
+        'id',  'title', 'price', 'image', 'featured', 'short_description', 'long_description', 'reviews'])
     products = [p['fields'] for p in json.loads(products)]
     for p in products:
+        p['id'] = id
         reviews = p['reviews']
         count = len(reviews)
         rates = [r['rate'] for r in reviews]
         p['rating'] = {'count': count, 'rate': sum(rates)/max(1, count)}
     return render(request, 'index.html', {
-        "products": products
+        "products": products, "about": about
     })
 
 
 def about(request):
-    return render(request, 'about.html')
+    about = list(About.objects.values())
+    return render(request, 'about.html', {'about': about})
 
 
 def productlist(request):
     products = ProductSerializer().serialize(Product.objects.all(), fields=[
-        'title', 'price', 'image', 'reviews'])
+        'id',   'title', 'price', 'image', 'featured', 'short_description', 'long_description', 'reviews'])
     products = [p['fields'] for p in json.loads(products)]
     for p in products:
         reviews = p['reviews']
@@ -76,9 +80,9 @@ def checkout(request):
     return render(request, 'checkout.html')
 
 
-def productdetail(request):
-    products = ProductSerializer().serialize(Product.objects.all().order_by('title')[:5], fields=[
-        'title', 'price', 'image', 'reviews'])
+def productdetail(request, id):
+    products = ProductSerializer().serialize(Product.objects.filter(pk=id).order_by('title')[:5], fields=[
+        'title', 'price', 'image', 'featured', 'short_description', 'long_description', 'reviews'])
     products = [p['fields'] for p in json.loads(products)]
     for p in products:
         reviews = p['reviews']

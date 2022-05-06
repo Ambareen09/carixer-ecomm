@@ -74,7 +74,7 @@
         </div>
         <div>
           <h5>{{o.title}}</h5>
-          <h6>Size: {{o.capacity}}</h6>
+          <h6>Size: {{o.size}}</h6>
           <h6>QTY: {{o.quantity}}</h6>
         </div>
         <div>
@@ -82,7 +82,7 @@
           <del class="me-2">₹ {{o.save}}</del>
           <span class="discount_per">SAVE {{o.percentSave}}%</span>
         </div>
-        <div> <a href="/orderdetail" class="btn btn-blue">View Details</a></div>
+        <div> <a href="/orderdetail/{{o.id}}" class="btn btn-blue">View Details</a></div>
       </div>
     </div>
     <!-- <div class="p-4 bg-white rounded-2 mb-4">

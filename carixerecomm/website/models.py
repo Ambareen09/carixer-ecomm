@@ -66,12 +66,21 @@ class OrderDetail(BaseModel):
         validators=[phone_regex], max_length=17, blank=True)
     free_shipping = models.BooleanField(default=True)
     shipping_charge = models.FloatField(null=True, default=0)
-    transit = models.TextField(null=True)
     current_location = models.IntegerField(null=True)
+    tracking_number = models.CharField(max_length=255)
 
     def __str__(self):
         return str(self.status) + " | " + str(self.order_id)
 
+class DeliveryCheckpoint(BaseModel):
+    transit_index = models.IntegerField()
+    order = models.ForeignKey(OrderDetail, on_delete=models.CASCADE, null=True, related_name="transitPoint")
+    message = models.CharField(max_length=255)
+    time = models.DateTimeField()
+    location = models.CharField(max_length=255)
+
+    def __str__(self):
+        return str(self.order) + " | " + str(self.transit_index)
 
 class About(BaseModel):
     about_title = models.CharField(null=True, max_length=255)
@@ -87,5 +96,6 @@ class Waterless(BaseModel):
 admin.site.register(Product)
 admin.site.register(Review)
 admin.site.register(OrderDetail)
+admin.site.register(DeliveryCheckpoint)
 admin.site.register(About)
 admin.site.register(Waterless)

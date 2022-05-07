@@ -5,7 +5,7 @@ from django.forms import model_to_dict
 from django.shortcuts import render
 from django.core.serializers import serialize
 from .serializers import ProductSerializer
-from .models import Product, OrderDetail, About, Waterless
+from .models import Product, OrderDetail, About, Waterless, DeliveryCheckpoint
 
 
 def cartItems(request):
@@ -130,9 +130,7 @@ def ordersdetail(request, id):
                 o['status_color'] = "cancel"
             case default:
                 o['status_color'] = "cancel"
-        print(o['status_color'])
-        o['transit'] = o['transit'].split(",")
-        print(o['transit'])
+        o['checkpoints'] = [model_to_dict(c) for c in DeliveryCheckpoint.objects.filter(order__id=id).order_by("transit_index")]
     return render(request, 'orderdetail.html', {"orders": orders, "cart": cart})
 
 

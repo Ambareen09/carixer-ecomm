@@ -5,7 +5,7 @@ from django.forms import model_to_dict
 from django.shortcuts import render
 from django.core.serializers import serialize
 from .serializers import ProductSerializer
-from .models import Product, OrderDetail, About
+from .models import Product, OrderDetail, About, Waterless
 
 
 def cartItems(request):
@@ -79,8 +79,10 @@ def productlist(request):
 
 
 def waterless(request):
+    waterless = list(Waterless.objects.values())
     cart = cartItems(request)
-    return render(request, 'waterless.html', {"cart": cart})
+    print(waterless)
+    return render(request, 'waterless.html', {"waterless": waterless, "cart": cart})
 
 
 def orders(request):

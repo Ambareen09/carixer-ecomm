@@ -3,7 +3,6 @@ from django.contrib import admin
 from django.core.validators import RegexValidator
 
 from django.core.validators import MaxValueValidator, MinValueValidator
-
 STATUS = {
     ("DELIVERED", "DELIVERED"),
     ("CANCELLED", "CANCELLED"),
@@ -81,7 +80,12 @@ class About(BaseModel):
     vision = models.TextField(null=True)
 
 
+class Waterless(BaseModel):
+    waterless = models.TextField(null=True)
+
+
 admin.site.register(Product)
 admin.site.register(Review)
 admin.site.register(OrderDetail)
 admin.site.register(About)
+admin.site.register(Waterless)

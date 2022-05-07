@@ -71,17 +71,11 @@
         </div>
         <div class="col p-3">
           <h5 class="mb-4 blue fw-bold">Why Ecowide</h5>
-          <div class="mb-2"><span style="font-size: 20px;font-weight: 500;">We Ecowide group is the leading distributor
-              of the ever best eco-friendly "CARIXER" Waterless Car Wash and other waterless car care products in GCC
-              and India. Our company is based in UAE with the European originated product line with trade mark name as
-              "CARIXER" and has a wide range of products like vehicle body wash, interior wash, engine degreaser, carpet
-              cleaner and conditioner, marine cleaning concentrate, micro-fiber clothes, etc..</span></div>
-          <div class="mb-4"><span style="font-size: 20px;font-weight: 500;">Our innovative, diverse and dynamic range of
-              "CARIXER" waterless car care products are formulated for the professional, commercial and consumer
-              markets. We are the specialists in providing eco-minded entrepreneurs and our "CARIXER" waterless car wash
-              saves your – water, time, money and effort. Our service is always extended to GCC Countries as well as in
-              India.</span></div>
+          {% for w in waterless %}
+          <!-- <p>{{w}}</p> -->
+          <div class="mb-2">{{w.waterless}}</div>
         </div>
+        {% endfor %}
       </div>
     </div>
     <hr>

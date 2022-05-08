@@ -17,57 +17,7 @@
 </head>
 
 <body>
-  <div class="top_header">
-    <span class="text-center">FREE SHIPPING FOR ALL ORDERS OVER $ 10 AND JUST A REMINDER, ALL OUR DELIVERIES ARECARBON
-      NATURALAL</span>
-  </div>
-  <div class="top_header2">
-    <nav id="navbar_top" class="navbar navbar-expand-lg navbar-light">
-      <div class="container-fluid">
-        <div class="collapse navbar-collapse" id="navbarScroll" style="width: 33.33%;">
-          <ul class="navbar-nav my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 400px;">
-            <li class="nav-item me-4">
-              <a class="nav-link" aria-current="page" href="/">HOME</a>
-            </li>
-            <li class="nav-item me-4">
-              <a class="nav-link" aria-current="page" href="/productlist">SHOP</a>
-            </li>
-            <li class="nav-item me-4">
-              <a class="nav-link" href="about">ABOUT</a>
-            </li>
-            <li class="nav-item me-4">
-              <a class="nav-link" aria-current="page" href="/waterless">WATERLESS</a>
-            </li>
-            {% if request.user.is_authenticated %}
-            <li class="nav-item me-4">
-              <a class="nav-link" href="/orders">MY ORDERS</a>
-            </li>
-            {% endif %}
-          </ul>
-        </div>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
-          aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <a class="navbar-brand" href="#" style="display: flex; justify-content: center;width: 33.33%;">
-          <img src="static/images/logo__1_.png" alt="" width="100">
-        </a>
-        <div style="display: flex; justify-content: flex-end;width: 33.33%;">
-          <button class="btn btn-outline-primary me-2 me-md-4" type="submit"><i class="fas fa-search"></i></button>
-          {% if request.user.is_authenticated %}
-          <button class="btn btn-outline-primary me-2 me-md-4" data-bs-toggle="modal" data-bs-target="#cartModal"
-            type="submit"><i class="fas fa-shopping-bag"></i></button>
-          <a href="/logout">
-            <button class="btn btn-outline-primary me-2 me-md-4"><i class="fas fa-sign-out"></i></button>
-          </a>
-          {% else %}
-          <button class="btn btn-outline-primary me-md-4" data-bs-toggle="modal" data-bs-target="#loginModal"
-            type="submit"><i class="fas fa-user"></i></button>
-          {% endif %}
-        </div>
-      </div>
-    </nav>
-  </div>
+  {% include 'base.html' %}
   <div>
     <div id="carouselExampleCaptions" class="carousel slide carousel-dark" data-bs-ride="carousel">
       <div class="carousel-indicators" style="bottom: -50px !important;">
@@ -451,7 +401,7 @@
 
   <!-- Cart Template -->
   {% if request.user.is_authenticated %}
-    {% include 'cart.html' %}
+  {% include 'cart.html' %}
   {% endif %}
   <!-- Cart Template -->
 

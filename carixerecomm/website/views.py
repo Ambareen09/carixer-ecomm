@@ -83,7 +83,15 @@ def about(request):
 
 
 def productlist(request):
-    products = ProductSerializer().serialize(Product.objects.all(), fields=[
+    if 'search' in request.GET:
+        query_products = Product.objects.filter(title__icontains=request.GET['search'])
+        if 'sort' in request.GET:
+            query_products = query_products.order_by(('-' if request.GET['sort']=='desc' else '')+'price')
+    elif 'sort' in request.GET:
+        query_products = Product.objects.all().order_by(('-' if request.GET['sort']=='desc' else '')+'price')
+    else:
+        query_products = Product.objects.all()
+    products = ProductSerializer().serialize(query_products, fields=[
         'id',   'title', 'price', 'image', 'featured', 'short_description', 'long_description', 'reviews'])
     products = [p['fields'] for p in json.loads(products)]
     cart = cartItems(request)
@@ -187,11 +195,7 @@ def productdetail(request, id):
 
 class cartView(View):
     def put(self, request, id_):
-        print(request.META)
-        print(request.body.decode('utf-8'))
-        print(request.POST, request.GET)
         data = json.loads(request.body.decode('utf-8'))
-        print(data)
         odo = OrderDetail.objects.get(id=id_, user__id=request.user.id, status="INCART")
         if data['quantity'] > 0:
             odo.quantity = data['quantity']

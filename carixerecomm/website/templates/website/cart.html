@@ -52,10 +52,10 @@
   function cartMinus(itemId, value){
     $.ajax({
         url: `/cart/${itemId}`,
-        type: 'put',
+        type: 'PUT',
         headers: {'X-CSRFToken': csrftoken},
-        mode: 'same-origin',
-        data: {'quantity': value},
+        data: `{ "quantity" : ${value} }`,
+
         success: function(){
             alert("worked");
         }

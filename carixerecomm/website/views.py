@@ -187,7 +187,11 @@ def productdetail(request, id):
 
 class cartView(View):
     def put(self, request, id_):
-        data = request.POST
+        print(request.META)
+        print(request.body.decode('utf-8'))
+        print(request.POST, request.GET)
+        data = json.loads(request.body.decode('utf-8'))
+        print(data)
         odo = OrderDetail.objects.get(id=id_, user__id=request.user.id, status="INCART")
         if data['quantity'] > 0:
             odo.quantity = data['quantity']

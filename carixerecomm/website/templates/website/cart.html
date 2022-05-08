@@ -1,4 +1,3 @@
-<meta id="csrf_data" data-token="{{ csrf_token }}">
 <div class="modal" id="cartModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog cart-dialog">
     <div class="modal-content cart-content">
@@ -11,7 +10,6 @@
         <hr>
         <div>
           <div class="card mb-3 border-light" style="max-width: 540px;">
-            {{csrf_token}}
             {% for c in cart %}
             <div class="row g-0">
               <div class="col-md-4">
@@ -23,7 +21,7 @@
                   <p class="card-text fw-bold">${{c.totalPrice}}</p>
                   <div class="d-flex justify-content-between align-items-center">
                     <div class="d-flex btn-outline-blue rounded" style="width: 50%;">
-                      <button type="button" th:action="@{/cart}" class="quantity-left-minus btn btn-number" data-type="minus" data-field="" onclick="cartMinus({{c.id}}, {{c.quantity-1}})"">
+                      <button type="button" class="quantity-left-minus btn btn-number" data-type="minus" data-field="" onclick="cartMinus({{c.id}}, {{c.quantity-1}})"">
                         <i class="fas fa-minus"></i>
                       </button>
                       <input type="text" id="quantity" name="quantity"
@@ -33,7 +31,7 @@
                       </button>
                     </div>
                     <div>
-                      <a class="blue ms-5 fw-normal" href="#">REMOVE</a>
+                      <a class="blue ms-5 fw-normal" href="#" onclick=cartMinus({{c.id}}, 0)>REMOVE</a>
                     </div>
                   </div>
                 </div>

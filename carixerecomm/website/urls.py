@@ -1,10 +1,14 @@
 from django.urls import path
+from django.contrib.auth.views import LoginView, LogoutView
+
 from . import views
 
 urlpatterns = [
     path("", views.index),
     
     path("register", views.register, name="signup"),
+    path("login", LoginView.as_view(), name="signin"),
+    path("login", LogoutView.as_view(), name="signout"),
     
     path('about', views.about, name='about'),
     path('productlist', views.productlist, name='product-list'),

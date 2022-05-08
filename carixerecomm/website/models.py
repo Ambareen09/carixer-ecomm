@@ -1,6 +1,8 @@
+from tkinter import CASCADE
 from django.db import models
 from django.contrib import admin
 from django.core.validators import RegexValidator
+from django.contrib.auth.models import User
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 STATUS = {
@@ -36,6 +38,7 @@ class Product(BaseModel):
 
 
 class Review(BaseModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     rate = models.IntegerField(
         default=1,
         validators=[MinValueValidator(0), MaxValueValidator(5)]
@@ -48,6 +51,7 @@ class Review(BaseModel):
 
 
 class OrderDetail(BaseModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     status = models.CharField(choices=STATUS, max_length=255, null=True)
     date = models.DateField(null=True)
     order_id = models.CharField(max_length=255, null=True)
@@ -72,15 +76,18 @@ class OrderDetail(BaseModel):
     def __str__(self):
         return str(self.status) + " | " + str(self.order_id)
 
+
 class DeliveryCheckpoint(BaseModel):
     transit_index = models.IntegerField()
-    order = models.ForeignKey(OrderDetail, on_delete=models.CASCADE, null=True, related_name="transitPoint")
+    order = models.ForeignKey(
+        OrderDetail, on_delete=models.CASCADE, null=True, related_name="transitPoint")
     message = models.CharField(max_length=255)
     time = models.DateTimeField()
     location = models.CharField(max_length=255)
 
     def __str__(self):
         return str(self.order) + " | " + str(self.transit_index)
+
 
 class About(BaseModel):
     about_title = models.CharField(null=True, max_length=255)

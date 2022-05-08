@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from .serializers import ProductSerializer
 from .models import Product, OrderDetail, About, Waterless, DeliveryCheckpoint
 
+
 def register(request):
     data = request.POST
     username = data['username']
@@ -15,16 +16,19 @@ def register(request):
 
     if User.objects.filter(username=username).exists():
         return index(request)
-    
+
     if User.objects.filter(email=email).exists():
         return index(request)
 
-    user = User.objects.create_user(username=username, email=email, password=password)
+    user = User.objects.create_user(
+        username=username, email=email, password=password)
     return index(request)
-    
+
 
 def cartItems(request):
-    cart = list(OrderDetail.objects.filter(status="INCART").values())
+    cart = list(OrderDetail.objects.filter(
+        user__id=request.user.id, status="INCART").values())
+    print(cart)
     for o in cart:
         product = list(Product.objects.filter(id=o['product_id']).values())
         for p in product:
@@ -145,7 +149,8 @@ def ordersdetail(request, id):
                 o['status_color'] = "cancel"
             case default:
                 o['status_color'] = "cancel"
-        o['checkpoints'] = [model_to_dict(c) for c in DeliveryCheckpoint.objects.filter(order__id=id).order_by("transit_index")]
+        o['checkpoints'] = [model_to_dict(c) for c in DeliveryCheckpoint.objects.filter(
+            order__id=id).order_by("transit_index")]
     return render(request, 'orderdetail.html', {"orders": orders, "cart": cart})
 
 

@@ -1,12 +1,26 @@
-from email.policy import default
 import json
-from tkinter.tix import Form
 from django.forms import model_to_dict
 from django.shortcuts import render
-from django.core.serializers import serialize
+from django.contrib.auth.models import User
+
 from .serializers import ProductSerializer
 from .models import Product, OrderDetail, About, Waterless, DeliveryCheckpoint
 
+def register(request):
+    data = request.POST
+    username = data['username']
+    password = data['password']
+    email = data['email']
+
+    if User.objects.filter(username=username).exists():
+        return index(request)
+    
+    if User.objects.filter(email=email).exists():
+        return index(request)
+
+    user = User.objects.create_user(username=username, email=email, password=password)
+    return index(request)
+    
 
 def cartItems(request):
     cart = list(OrderDetail.objects.filter(status="INCART").values())

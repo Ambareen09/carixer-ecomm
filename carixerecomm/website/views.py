@@ -1,5 +1,7 @@
 import json
 
+from django.views import View
+from django.http import HttpResponse
 from django.forms import model_to_dict
 from django.shortcuts import render
 from django.contrib.auth.models import User
@@ -28,7 +30,6 @@ def register(request):
 def cartItems(request):
     cart = list(OrderDetail.objects.filter(
         user__id=request.user.id, status="INCART").values())
-    print(cart)
     for o in cart:
         product = list(Product.objects.filter(id=o['product_id']).values())
         for p in product:
@@ -183,3 +184,10 @@ def productdetail(request, id):
     return render(request, 'productdetail.html', {
         "p": product[0], "suggestions": suggestions, "cart": cart
     })
+
+class cartView(View):
+    def put(self, request, id):
+        data = request.POST
+        print(data)
+        return HttpResponse({'msg': 'successful'})
+

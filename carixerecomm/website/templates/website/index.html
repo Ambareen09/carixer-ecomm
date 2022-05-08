@@ -27,6 +27,9 @@
         <div class="collapse navbar-collapse" id="navbarScroll" style="width: 33.33%;">
           <ul class="navbar-nav my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 400px;">
             <li class="nav-item me-4">
+              <a class="nav-link" aria-current="page" href="/">HOME</a>
+            </li>
+            <li class="nav-item me-4">
               <a class="nav-link" aria-current="page" href="/productlist">SHOP</a>
             </li>
             <li class="nav-item me-4">
@@ -54,9 +57,13 @@
           {% if request.user.is_authenticated %}
           <button class="btn btn-outline-primary me-2 me-md-4" data-bs-toggle="modal" data-bs-target="#cartModal"
             type="submit"><i class="fas fa-shopping-bag"></i></button>
-            {% endif %}
+          <a href="/logout">
+            <button class="btn btn-outline-primary me-2 me-md-4"><i class="fas fa-sign-out"></i></button>
+          </a>
+          {% else %}
           <button class="btn btn-outline-primary me-md-4" data-bs-toggle="modal" data-bs-target="#loginModal"
             type="submit"><i class="fas fa-user"></i></button>
+          {% endif %}
         </div>
       </div>
     </nav>
@@ -441,93 +448,6 @@
   </div>
 
   <!-- Signup Modal -->
-
-  <!-- cart Modal -->
-
-  <!-- <div class="modal" id="cartModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog cart-dialog">
-      <div class="modal-content cart-content">
-        <div class="modal-header">
-          <h5 class="modal-title blue" id="exampleModalLabel">CART</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <h6 class="modal-title blue" id="exampleModalLabel">You are eligible for free shipping</h6>
-          <hr>
-          <div>
-            <div class="card mb-3 border-light" style="max-width: 540px;">
-              <div class="row g-0">
-                <div class="col-md-4">
-                  <img src="static/images/product1.png" class="img-fluid rounded-start" alt="...">
-                </div>
-                <div class="col-md-8">
-                  <div class="card-body cart-card-body">
-                    <h6 class="card-title blue">DISINFECTED SOLUTION</h6>
-                    <p class="card-text fw-bold">$500</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                      <div class="d-flex btn-outline-blue rounded" style="width: 50%;">
-                        <button type="button" class="quantity-left-minus btn btn-number" data-type="minus"
-                          data-field="">
-                          <i class="fas fa-minus"></i>
-                        </button>
-                        <input type="text" id="quantity" name="quantity"
-                          class="form-control text-center input-number fw-bold blue" value="1" min="1" max="100" />
-                        <button type="button" class="quantity-right-plus btn btn-number" data-type="plus" data-field="">
-                          <i class="fas fa-plus"></i>
-                        </button>
-                      </div>
-                      <div>
-                        <a class="blue ms-5 fw-normal" href="#">REMOVE</a>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="card mb-3 border-light" style="max-width: 540px;">
-              <div class="row g-0">
-                <div class="col-md-4">
-                  <img src="static/images/product1.png" class="img-fluid rounded-start" alt="...">
-                </div>
-                <div class="col-md-8">
-                  <div class="card-body cart-card-body">
-                    <h6 class="card-title blue">DISINFECTED SOLUTION</h6>
-                    <p class="card-text fw-bold">$500</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                      <div class="d-flex btn-outline-blue rounded" style="width: 50%;">
-                        <button type="button" class="quantity-left-minus btn btn-number" data-type="minus"
-                          data-field="">
-                          <i class="fas fa-minus"></i>
-                        </button>
-                        <input type="text" id="quantity" name="quantity"
-                          class="form-control text-center input-number fw-bold blue" value="1" min="1" max="100" />
-                        <button type="button" class="quantity-right-plus btn btn-number" data-type="plus" data-field="">
-                          <i class="fas fa-plus"></i>
-                        </button>
-                      </div>
-                      <div>
-                        <a class="blue ms-5 fw-normal" href="#">REMOVE</a>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <a href="/checkout" class="btn btn-blue w-100">CHECK OUT</a>
-        </div>
-      </div>
-    </div>
-  </div> -->
-  <!-- {% include 'cart.html' %} -->
-
-
-  <!-- cart Modal -->
-
 
   <!-- Cart Template -->
   {% if request.user.is_authenticated %}

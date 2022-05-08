@@ -1,3 +1,4 @@
+<meta id="csrf_data" data-token="{{ csrf_token }}">
 <div class="modal" id="cartModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog cart-dialog">
     <div class="modal-content cart-content">
@@ -10,6 +11,7 @@
         <hr>
         <div>
           <div class="card mb-3 border-light" style="max-width: 540px;">
+            {{csrf_token}}
             {% for c in cart %}
             <div class="row g-0">
               <div class="col-md-4">
@@ -21,12 +23,12 @@
                   <p class="card-text fw-bold">${{c.totalPrice}}</p>
                   <div class="d-flex justify-content-between align-items-center">
                     <div class="d-flex btn-outline-blue rounded" style="width: 50%;">
-                      <button type="button" class="quantity-left-minus btn btn-number" data-type="minus" data-field="">
+                      <button type="button" th:action="@{/cart}" class="quantity-left-minus btn btn-number" data-type="minus" data-field="" onclick="cartMinus({{c.id}}, {{c.quantity-1}})"">
                         <i class="fas fa-minus"></i>
                       </button>
                       <input type="text" id="quantity" name="quantity"
-                        class="form-control text-center input-number fw-bold blue" value="1" min="1" max="100" />
-                      <button type="button" class="quantity-right-plus btn btn-number" data-type="plus" data-field="">
+                        class="form-control text-center input-number fw-bold blue" value={{c.quantity}} min="1" max="100" onchange=cartMinus({{c.id}},${value})/>
+                      <button type="button" class="quantity-right-plus btn btn-number" data-type="plus" data-field="" onclick=cartMinus({{c.id}}, {{c.quantity+1}})>
                         <i class="fas fa-plus"></i>
                       </button>
                     </div>
@@ -34,41 +36,11 @@
                       <a class="blue ms-5 fw-normal" href="#">REMOVE</a>
                     </div>
                   </div>
-
                 </div>
               </div>
             </div>
           </div>
           {% endfor %}
-          <!-- <div class="card mb-3 border-light" style="max-width: 540px;">
-            <div class="row g-0">
-              <div class="col-md-4">
-                <img src="images/product1.png" class="img-fluid rounded-start" alt="...">
-              </div>
-              <div class="col-md-8">
-                <div class="card-body cart-card-body">
-                  <h6 class="card-title blue">DISINFECTED SOLUTION</h6>
-                  <p class="card-text fw-bold">$500</p>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="d-flex btn-outline-blue rounded" style="width: 50%;">
-                      <button type="button" class="quantity-left-minus btn btn-number" data-type="minus" data-field="">
-                        <i class="fas fa-minus"></i>
-                      </button>
-                      <input type="text" id="quantity" name="quantity"
-                        class="form-control text-center input-number fw-bold blue" value="1" min="1" max="100" />
-                      <button type="button" class="quantity-right-plus btn btn-number" data-type="plus" data-field="">
-                        <i class="fas fa-plus"></i>
-                      </button>
-                    </div>
-                    <div>
-                      <a class="blue ms-5 fw-normal" href="#">REMOVE</a>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-          </div> -->
         </div>
       </div>
       <div class="modal-footer">
@@ -77,3 +49,18 @@
     </div>
   </div>
 </div>
+<script>
+  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  function cartMinus(itemId, value){
+    $.ajax({
+        url: `/cart/${itemId}`,
+        type: 'put',
+        headers: {'X-CSRFToken': csrftoken},
+        mode: 'same-origin',
+        data: {'quantity': value},
+        success: function(){
+            alert("worked");
+        }
+    });
+}
+</script>

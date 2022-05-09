@@ -1,7 +1,8 @@
 import json
+import re
 
 from django.views import View
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.forms import model_to_dict
 from django.shortcuts import render
 from django.contrib.auth.models import User
@@ -169,9 +170,28 @@ def ordersdetail(request, id):
 
 
 def checkout(request):
-    cartItem = cartItems(request)
-    carts = cart(cartItem)
-    return render(request, 'checkout.html', {"cartItems": cartItem, "cart": carts})
+    if request.method == 'POST':
+        user_id = request.user
+        country = request.POST.get('country')
+        first_name = request.POST.get('firstname')
+        last_name = request.POST.get('lastname')
+        address = request.POST.get('address')
+        apartment = request.POST.get('apartment')
+        postal_code = request.POST.get('postalcode')
+        city = request.POST.get('city')
+        phone_number = request.POST.get('phonenumber')
+        shipping_charge = request.POST.get('flexRadioDefault')
+        status = "ORDERED"
+
+        OrderDetail.objects.create(user=user_id, country=country, first_name=first_name, last_name=last_name,
+                                   address=address, apartment=apartment, postal_code=postal_code, city=city, phone_number=phone_number,
+                                   shipping_charge=shipping_charge, status=status)
+        return HttpResponseRedirect('/productlist')
+
+    if request.method == 'GET':
+        cartItem = cartItems(request)
+        carts = cart(cartItem)
+        return render(request, 'checkout.html', {"cartItems": cartItem, "cart": carts})
 
 
 def productdetail(request, id):
@@ -195,7 +215,8 @@ def productdetail(request, id):
         rates = [r['rate'] for r in reviews]
         p['rating'] = {'count': count, 'rate': sum(rates)/max(1, count)}
 
-    sizes = [{'id': p['id'], 'price':p['price'], 'size': p['size']} for p in product]
+    sizes = [{'id': p['id'], 'price':p['price'], 'size': p['size']}
+             for p in product]
     print(sizes)
     return render(request, 'productdetail.html', {
         "p": product[0], "sizes": sizes, "suggestions": suggestions, "cart": cart
@@ -213,16 +234,17 @@ class cartView(View):
         else:
             odo.delete()
         return HttpResponse({'msg': 'successful'})
-    
+
     def post(self, request, id_):
         data = json.loads(request.body.decode('utf-8'))
         from datetime import date
-        if  OrderDetail.objects.filter(product__id=id_, user__id=request.user.id, status="INCART").exists():
-            odo = OrderDetail.objects.get(product__id=id_, user__id=request.user.id, status="INCART")
+        if OrderDetail.objects.filter(product__id=id_, user__id=request.user.id, status="INCART").exists():
+            odo = OrderDetail.objects.get(
+                product__id=id_, user__id=request.user.id, status="INCART")
             odo.quantity += data['quantity']
             odo.save()
         else:
             odo = OrderDetail(user=request.user, status="INCART", date=date.today(),
-                        product=Product.objects.get(id=id_), quantity=data['quantity'])
+                              product=Product.objects.get(id=id_), quantity=data['quantity'])
             odo.save()
         return HttpResponse({'msg': 'successful'})

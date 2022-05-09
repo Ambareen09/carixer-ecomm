@@ -75,7 +75,7 @@ class OrderDetail(BaseModel):
     tracking_number = models.CharField(max_length=255)
 
     def __str__(self):
-        return str(self.status) + " | " + str(self.order_id)
+        return str(self.status) + " | " + str(self.first_name)
 
 
 class DeliveryCheckpoint(BaseModel):

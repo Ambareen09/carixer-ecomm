@@ -33,87 +33,88 @@
         </nav>
       </div>
       <form action="/checkout" method="post">
-      <div class="mt-4">
-        <h4>Shipping Address</h4>
-        <div class="form-floating mt-3">
-          <select class="form-select" id="country" aria-label="Floating label select example">
-            <option selected>America</option>
-            <option value="1">India</option>
-            <option value="2">Australia</option>
-            <option value="3">Dubai</option>
-          </select>
-          <label for="country">Country / Region</label>
-        </div>
-      </div>
-      <div class="row g-2 mt-1">
-        <div class="col-md">
-          <div class="form-floating">
-            <input type="email" class="form-control" id="firstname" placeholder="name@example.com">
-            <label for="firstname">First Name</label>
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+        <div class="mt-4">
+          <h4>Shipping Address</h4>
+          <div class="form-floating mt-3">
+            <select class="form-select" id="country" name="country" aria-label="Floating label select example">
+              <option selected>America</option>
+              <option value="1">India</option>
+              <option value="2">Australia</option>
+              <option value="3">Dubai</option>
+            </select>
+            <label for="country">Country / Region</label>
           </div>
         </div>
-        <div class="col-md">
-          <div class="form-floating">
-            <input type="email" class="form-control" id="lastname" placeholder="name@example.com">
-            <label for="lastname">Last Name</label>
+        <div class="row g-2 mt-1">
+          <div class="col-md">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="firstname" name="firstname" placeholder="name@example.com">
+              <label for="firstname">First Name</label>
+            </div>
+          </div>
+          <div class="col-md">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="lastname" name="lastname" placeholder="name@example.com">
+              <label for="lastname">Last Name</label>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="form-floating mt-2">
-        <input type="email" class="form-control" id="address" placeholder="name@example.com">
-        <label for="address">Address</label>
-      </div>
-      <div class="form-floating mt-2">
-        <input type="password" class="form-control" id="apartment" placeholder="Password">
-        <label for="apartment">Apartment., suite., etc (Optional)</label>
-      </div>
-      <div class="row g-2 mt-1">
-        <div class="col-md">
-          <div class="form-floating">
-            <input type="email" class="form-control" id="postalcode" placeholder="name@example.com">
-            <label for="postalcode">Postal Code</label>
+        <div class="form-floating mt-2">
+          <input type="text" class="form-control" id="address" name="address" placeholder="name@example.com">
+          <label for="address">Address</label>
+        </div>
+        <div class="form-floating mt-2">
+          <input type="text" class="form-control" id="apartment" name="apartment" placeholder="Password">
+          <label for="apartment">Apartment., suite., etc (Optional)</label>
+        </div>
+        <div class="row g-2 mt-1">
+          <div class="col-md">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="postalcode" name="postalcode" placeholder="name@example.com">
+              <label for="postalcode">Postal Code</label>
+            </div>
+          </div>
+          <div class="col-md">
+            <div class="form-floating">
+              <input type="text" class="form-control" id="city" name="city" placeholder="name@example.com">
+              <label for="city">City</label>
+            </div>
           </div>
         </div>
-        <div class="col-md">
-          <div class="form-floating">
-            <input type="email" class="form-control" id="city" placeholder="name@example.com">
-            <label for="city">City</label>
+        <div class="form-floating mt-2">
+          <input type="tel" class="form-control" id="phonenumber" name="phonenumber" placeholder="name@example.com">
+          <label for="phonenumber">Phone Number</label>
+        </div>
+        <div class="mt-4">
+          <h4>Shipping Method</h4>
+          <div class="mt-4 bg-white p-4 rounded-3">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="flexRadioDefault" id="freeshipping" value="0" checked>
+              <label class="form-check-label" for="freeshipping" value="0">
+                Free Shipping
+              </label>
+              <label class="form-check-label text-end" for="freeshipping" style="margin-left: 200px;" value="0">
+                Free
+              </label>
+            </div>
+            <hr>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="flexRadioDefault" id="international" value="50">
+              <label class="form-check-label" for="international" value="50">
+                International
+              </label>
+              <label class="form-check-label text-end" for="international" style="margin-left: 200px;" value="50">
+                ₹ 50
+              </label>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="form-floating mt-2">
-        <input type="email" class="form-control" id="phonenumber" placeholder="name@example.com">
-        <label for="phonenumber">Phone Number</label>
-      </div>
-      <div class="mt-4">
-        <h4>Shipping Method</h4>
-        <div class="mt-4 bg-white p-4 rounded-3">
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="flexRadioDefault" id="freeshipping" checked>
-            <label class="form-check-label" for="freeshipping">
-              Free Shipping
-            </label>
-            <label class="form-check-label text-end" for="freeshipping" style="margin-left: 200px;">
-              Free
-            </label>
-          </div>
-          <hr>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="flexRadioDefault" id="international">
-            <label class="form-check-label" for="international">
-              International
-            </label>
-            <label class="form-check-label text-end" for="international" style="margin-left: 200px;">
-              ₹ 50
-            </label>
-          </div>
+        <div class="mt-4">
+          <button type="submit" class="btn btn-blue" style="height: 50px;">continue to Payment</button>
+          <button type="button" class="btn blue fw-bold ms-4">Back to Cart</button>
         </div>
-      </div>
-      <div class="mt-4">
-        <button type="submit" class="btn btn-blue" style="height: 50px;">continue to Payment</button>
-        <button type="button" class="btn blue fw-bold ms-4">Back to Cart</button>
-      </div>
-    </form>
+      </form>
     </div>
     <div class="p-md-5" style="width: 50%; height: 100%;">
       <div class="w-75">
@@ -123,18 +124,18 @@
             <div class="card border-0 mb-3" style="max-width: 540px;">
               <div class="row g-0">
                 <div class="col-md-4">
-                  <img src="/{{c.image[8:]}}" class="img-fluid rounded" width="110" alt="...">
+                  <img name="image" src="/{{c.image[8:]}}" class="img-fluid rounded" width="110" alt="...">
                 </div>
                 <div class="col-md-8">
                   <div class="card-body">
-                    <h5 class="card-title">{{c.title}}</h5>
-                    <p class="card-text">QTY: {{c.quantity}}</p>
+                    <h5 name="title" class="card-title">{{c.title}}</h5>
+                    <p name="quantity" class="card-text">QTY: {{c.quantity}}</p>
                   </div>
                 </div>
               </div>
             </div>
             <div>
-              <h5 class="blue">₹ {{c.totalPrice}}</h5>
+              <h5 name="totalPrice" class="blue">₹ {{c.totalPrice}}</h5>
             </div>
           </div>
           {% endfor %}
@@ -143,7 +144,7 @@
         <div>
           <div class="d-flex justify-content-between align-items-center mt-4">
             <h5>Sub Total</h5>
-            <h5>₹ {{cart.grandTotal}}</h5>
+            <h5 name="grandTotal">₹ {{cart.grandTotal}}</h5>
           </div>
           <div class="d-flex justify-content-between align-items-center mt-3">
             <h5>Shipping</h5>

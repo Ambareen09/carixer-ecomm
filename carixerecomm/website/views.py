@@ -31,12 +31,12 @@ def cartItems(request):
     cart = list(OrderDetail.objects.filter(
         user__id=request.user.id, status="INCART").values())
     for o in cart:
-        product = list(Product.objects.filter(id=o['product_id']).values())
-        for p in product:
-            o['title'] = p['title']
-            o['image'] = p['image']
-            o['totalPrice'] = o['quantity']*p['price']
-            o['save'] = o['totalPrice'] + 0.5*o['totalPrice']
+        p = Product.objects.get(id=o['product_id'])
+        o['title'] = p.title
+        o['image'] = str(p.image)
+        o['price'] = p.price
+        o['totalPrice'] = o['quantity']*p.price
+        o['save'] = o['totalPrice'] + 0.5*o['totalPrice']
         o['percentSave'] = 50
         temp = (o['status'])
         o['status_color'] = ""

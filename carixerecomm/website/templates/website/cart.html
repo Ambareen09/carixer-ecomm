@@ -18,18 +18,18 @@
               <div class="col-md-8">
                 <div class="card-body cart-card-body">
                   <h6 class="card-title blue">{{c.title}}</h6>
-                  <p class="card-text fw-bold">${{c.totalPrice}}</p>
+                  <p id="totalPrice{{c.id}}" class="card-text fw-bold">${{c.totalPrice}}</p>
                   <div class="d-flex justify-content-between align-items-center">
                     <div class="d-flex btn-outline-blue rounded" style="width: 50%;">
                       <button id="decrease" type="button" class="quantity-left-minus btn btn-number" data-type="minus"
-                        data-field="" onclick="cartMinus({{c.id}})">
+                        data-field="" onclick="cartMinus({{c.id}}, {{c.price}})">
                         <i class="fas fa-minus"></i>
                       </button>
                       <input type="text" id="number{{c.id}}" name="quantity"
                         class="form-control text-center input-number fw-bold blue" value={{c.quantity}} min="1"
-                        max="100" onchange="cartInput({{c.id}})" />
+                        max="100" onchange="cartInput({{c.id}}, {{c.price}})" />
                       <button id="increase" type="button" class="quantity-right-plus btn btn-number" data-type="plus"
-                        data-field="" onclick="cartPlus({{c.id}})">
+                        data-field="" onclick="cartPlus({{c.id}}, {{c.price}})">
                         <i class="fas fa-plus"></i>
                       </button>
                     </div>
@@ -50,48 +50,10 @@
     </div>
   </div>
 </div>
-<!-- <script>
-  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-  function cartMinus(itemId, value) {
-    $.ajax({
-      url: `/cart/${itemId}`,
-      type: 'PUT',
-      headers: { 'X-CSRFToken': csrftoken },
-      data: `{ "quantity" : ${value - 1} }`,
 
-      success: function () {
-        document.getElementById(`quantity${itemId}`).value = value - 1
-      }
-    });
-  }
-  function cartPlus(itemId, value) {
-    $.ajax({
-      url: `/cart/${itemId}`,
-      type: 'PUT',
-      headers: { 'X-CSRFToken': csrftoken },
-      data: `{ "quantity" : ${value + 1} }`,
-
-      success: function () {
-        document.getElementById(`quantity${itemId}`).value = value + 1
-      }
-    });
-  }
-  function InputBox(itemId, value) {
-    $.ajax({
-      url: `/cart/${itemId}`,
-      type: 'PUT',
-      headers: { 'X-CSRFToken': csrftoken },
-      data: `{ "quantity" : ${value} }`,
-
-      success: function () {
-        document.getElementById(`quantity${itemId}`).value = value
-      }
-    });
-  }
-</script> -->
 <script>
   const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-  function cartPlus(itemId, value) {
+  function cartPlus(itemId, price) {
     const num = document.getElementById(`number${itemId}`)
     var value = parseInt(num.value, 10);
     value = isNaN(value) ? 0 : value;
@@ -104,12 +66,13 @@
       data: `{ "quantity" : ${value} }`,
       success: function () {
         num.value = value;
+        document.getElementById(`totalPrice${itemId}`).innerHTML = '$'+price*value;
       }
     })
   };
 
 
-  function cartMinus(itemId) {
+  function cartMinus(itemId, price) {
     const num = document.getElementById(`number${itemId}`)
     var value = parseInt(num.value, 10);
     value = isNaN(value) ? 0 : value;
@@ -122,11 +85,13 @@
       data: `{ "quantity" : ${value} }`,
       success: function () {
         num.value = value;
+        document.getElementById(`totalPrice${itemId}`).innerHTML = '$'+price*value;
+        console.log(price,value,price*value);
       }
     })
   }
 
-  function cartInput(itemId) {
+  function cartInput(itemId, price) {
     const num = document.getElementById(`number${itemId}`)
     var value = parseInt(num.value, 10);
     value = isNaN(value) ? 0 : value;
@@ -138,6 +103,7 @@
       data: `{ "quantity" : ${value} }`,
       success: function () {
         num.value = value;
+        document.getElementById(`totalPrice${itemId}`).innerHTML = '$'+price*value;
       }
     })
   }

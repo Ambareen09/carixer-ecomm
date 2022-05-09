@@ -28,7 +28,7 @@ class BaseModel(models.Model):
 class Product(BaseModel):
     title = models.CharField(max_length=255)
     price = models.JSONField(null=True)
-    image = models.FileField()
+    image = models.FileField(upload_to="website/static/images")
     featured = models.BooleanField(default=False)
     short_description = models.TextField(null=True)
     long_description = models.TextField(null=True)

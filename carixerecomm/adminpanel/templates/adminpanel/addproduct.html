@@ -100,9 +100,9 @@
         <!-- / Navbar -->
 
         <!-- Content wrapper -->
-        <form role="form" method="POST" action="{% url '/adminpanel/addproduct' %}" enctype="multipart/form-data">
-          {% csrf_token %}
-          <!-- <div class="card m-5">
+        <form role="form" method="POST" action="/adminpanel/addproduct">
+          <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+          <div class="card m-5">
             <div class="card-header d-flex justify-content-between align-items-center">
 
               <h5>Add New Product</h5>
@@ -116,15 +116,16 @@
               <hr>
               <div class="mb-3">
                 <label for="productname" class="form-label">Product Name*</label>
-                <input type="text" class="form-control" id="productname" placeholder="Enter Product Name" />
+                <input type="text" class="form-control" id="productname" name="productname"
+                  placeholder="Enter Product Name" />
               </div>
               <div class="mb-3">
                 <label for="description" class="form-label">Product Description*</label>
-                <textarea class="form-control" id="description" rows="3"></textarea>
+                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
               </div>
               <div class="mb-3">
                 <label for="productimage" class="form-label">Product Image*</label>
-                <input class="form-control" id="productimage" type="file">
+                <input class="form-control" id="productimage" name="productimage" type="file">
               </div>
             </div>
             <div class="p-4">
@@ -133,19 +134,19 @@
               <div class="row mb-3">
                 <div class="col">
                   <label for="size" class="form-label">Size</label>
-                  <input type="text" class="form-control" id="size" value="200ml" readonly
+                  <input type="text" class="form-control" id="size" name="size" value="200ml" readonly
                     placeholder="Enter Product Name" />
                 </div>
                 <div class="col">
                   <label for="price" class="form-label">Price</label>
-                  <input type="text" class="form-control" id="price" placeholder="Enter Price" />
+                  <input type="text" class="form-control" id="price" name="price" placeholder="Enter Price" />
                 </div>
                 <div class="col">
                   <label for="stock" class="form-label">Stock</label>
-                  <input type="text" class="form-control" id="stock" placeholder="Enter Stock" />
+                  <input type="text" class="form-control" id="stock" name="stock" placeholder="Enter Stock" />
                 </div>
               </div>
-              <div class="row mb-3">
+              <!-- <div class="row mb-3">
                 <div class="col">
                   <label for="size" class="form-label">Size</label>
                   <input type="text" class="form-control" id="size" value="400ml" readonly
@@ -204,13 +205,12 @@
                   <label for="stock" class="form-label">Stock</label>
                   <input type="text" class="form-control" id="stock" placeholder="Enter Stock" />
                 </div>
-              </div>
+              </div> -->
             </div>
-          </div> -->
-          {{form}}
+          </div>
           <!-- Content wrapper -->
-        </form>
       </div>
+      </form>
       <!-- / Layout page -->
     </div>
 

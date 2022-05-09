@@ -47,7 +47,7 @@
         {% for p in products%}
         <a style="text-decoration:none; color:#000;" href="productdetail/{{p.id}}"
           class="card border-light text-center me-3 list_card" id={{p.id}}>
-          <img src="static/images/{{p.image}}" class="card-img-top img">
+          <img src="/{{p.image[8:]}}" class="card-img-top img">
           <div class="card-body">
             <h6 class="card-title blue fw-bold">'{{p.title}}</h6>
             <p class="card-text blue fw-bold">₹ {{p.price}}</p>
@@ -290,17 +290,7 @@
       });
     }); 
   </script>
-  <!-- <script>
-  $(document).ready(function(e){
-    vasanth.products.forEach((i)=>loadproducts(i));
-});
 
-function loadproducts(data){
- var pro = '<li class=\"card border-light text-center me-3 list_card\" id='+data.id+'><img src='+data.image+' class=\"card-img-top img\"><div class=\"card-body\"><h6 class=\"card-title blue fw-bold\">'+data.title+'</h6><p class=\"card-text blue fw-bold\">₹ '+data.price+'</p><p><span class=\"fa fa-star checked\"></span><span class=\"fa fa-star checked\"></span><span class=\"fa fa-star checked\"></span><span class=\"fa fa-star\"></span><span class=\"fa fa-star\"></span><span class=\"fw-normal\"> '+data.rating.count+' reviews</span></p></div></li>'
-
- $("#listproducts").append(pro);
-}
-</script> -->
 <script>
 $(document).ready(function(){
  $("#fourview").on("click", function(){

@@ -5,34 +5,35 @@ from django.http import HttpResponse
 from django.forms import model_to_dict
 from django.shortcuts import render
 from django.contrib.auth.models import User
+from .forms import UploadProduct
 
 from website.serializers import ProductSerializer
 from website.models import Product, OrderDetail, About, Waterless, DeliveryCheckpoint
 
 
-def cartItems(request):
-    cart = list(OrderDetail.objects.filter(
-        user__id=request.user.id, status="INCART").values())
-    for o in cart:
-        product = list(Product.objects.filter(id=o['product_id']).values())
-        for p in product:
-            o['title'] = p['title']
-            o['image'] = p['image']
-            o['totalPrice'] = o['quantity']*p['price']
-            o['save'] = o['totalPrice'] + 0.5*o['totalPrice']
-        o['percentSave'] = 50
-        temp = (o['status'])
-        o['status_color'] = ""
-        match temp:
-            case "DELIVERED":
-                o['status_color'] = "delivery"
-            case "ORDERED":
-                o['status_color'] = "order"
-            case "CANCELLED":
-                o['status_color'] = "cancel"
-            case default:
-                o['status_color'] = "cancel"
-    return cart
+# def cartItems(request):
+#     cart = list(OrderDetail.objects.filter(
+#         user__id=request.user.id, status="INCART").values())
+#     for o in cart:
+#         product = list(Product.objects.filter(id=o['product_id']).values())
+#         for p in product:
+#             o['title'] = p['title']
+#             o['image'] = p['image']
+#             o['totalPrice'] = o['quantity']*p['price']
+#             o['save'] = o['totalPrice'] + 0.5*o['totalPrice']
+#         o['percentSave'] = 50
+#         temp = (o['status'])
+#         o['status_color'] = ""
+#         match temp:
+#             case "DELIVERED":
+#                 o['status_color'] = "delivery"
+#             case "ORDERED":
+#                 o['status_color'] = "order"
+#             case "CANCELLED":
+#                 o['status_color'] = "cancel"
+#             case default:
+#                 o['status_color'] = "cancel"
+#     return cart
 
 
 def register(request):
@@ -67,7 +68,12 @@ def index(request):
 
 
 def addproduct(request):
-    return render(request, 'adminpanel/addproduct.html')
+    if request.POST:
+        form = UploadProduct(request.POST, request.FILES)
+        print(request.FILES)
+        if form.is_valid():
+            form.save()
+    return render(request, 'adminpanel/addproduct.html', {'form': form})
 
 
 def productlist(request):

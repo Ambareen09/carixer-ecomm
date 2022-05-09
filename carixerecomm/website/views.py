@@ -84,11 +84,14 @@ def about(request):
 
 def productlist(request):
     if 'search' in request.GET:
-        query_products = Product.objects.filter(title__icontains=request.GET['search'])
+        query_products = Product.objects.filter(
+            title__icontains=request.GET['search'])
         if 'sort' in request.GET:
-            query_products = query_products.order_by(('-' if request.GET['sort']=='desc' else '')+'price')
+            query_products = query_products.order_by(
+                ('-' if request.GET['sort'] == 'desc' else '')+'price')
     elif 'sort' in request.GET:
-        query_products = Product.objects.all().order_by(('-' if request.GET['sort']=='desc' else '')+'price')
+        query_products = Product.objects.all().order_by(
+            ('-' if request.GET['sort'] == 'desc' else '')+'price')
     else:
         query_products = Product.objects.all()
     products = ProductSerializer().serialize(query_products, fields=[
@@ -193,14 +196,15 @@ def productdetail(request, id):
         "p": product[0], "suggestions": suggestions, "cart": cart
     })
 
+
 class cartView(View):
     def put(self, request, id_):
         data = json.loads(request.body.decode('utf-8'))
-        odo = OrderDetail.objects.get(id=id_, user__id=request.user.id, status="INCART")
+        odo = OrderDetail.objects.get(
+            id=id_, user__id=request.user.id, status="INCART")
         if data['quantity'] > 0:
             odo.quantity = data['quantity']
             odo.save()
         else:
             odo.delete()
         return HttpResponse({'msg': 'successful'})
-

@@ -42,30 +42,29 @@
         </p>
         <div class="d-flex justify-content-between align-items-center mt-5">
           <div class="w-50">
-            <select class="form-select btn-outline-blue" aria-label="Default select example">
-              <option selected>Select Size</option>
-              <option value="1">400ml</option>
-              <option value="2">800ml</option>
-              <option value="3">1000ml</option>
+            <select id='selectPrice' class="form-select btn-outline-blue" aria-label="Default select example" onchange="priceChange({{sizes}})">
+              {% for s in sizes%}
+                <option id="{{loop.index}}" value="{{s.size}}">{{s.size}}</option>
+              {% endfor %}
             </select>
           </div>
           <div class="w-50 ms-4">
-            <h3 class="fw-bold">${{p.price}}</h3>
+            <h3 id='price' class="fw-bold">$ Select Size</h3>
           </div>
         </div>
         <div class="d-flex justify-content-between align-items-center mt-5 w-75">
           <div class="d-flex w-25 btn-outline-blue rounded">
-            <button type="button" class="quantity-left-minus btn btn-number" data-type="minus" data-field="">
+            <button type="button" class="quantity-left-minus btn btn-number" data-type="minus" data-field="" onclick="minus()">
               <i class="fas fa-minus"></i>
             </button>
             <input type="text" id="quantity" name="quantity" class="form-control text-center input-number fw-bold blue"
               value="1" min="1" max="100" />
-            <button type="button" class="quantity-right-plus btn btn-number" data-type="plus" data-field="">
+            <button type="button" class="quantity-right-plus btn btn-number" data-type="plus" data-field="" onclick="plus()">
               <i class="fas fa-plus"></i>
             </button>
           </div>
           <div>
-            <button type="button" class="btn btn-outline-blue">
+            <button type="button" class="btn btn-outline-blue" onclick="addToCart({{p.id}})">
               ADD TO CART
             </button>
           </div>
@@ -299,87 +298,7 @@
 
   <!-- cart Modal -->
 
-  <!-- <div class="modal" id="cartModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog cart-dialog">
-      <div class="modal-content cart-content">
-        <div class="modal-header">
-          <h5 class="modal-title blue" id="exampleModalLabel">CART</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <h6 class="modal-title blue" id="exampleModalLabel">You are eligible for free shipping</h6>
-          <hr>
-          <div>
-            <div class="card mb-3 border-light" style="max-width: 540px;">
-              <div class="row g-0">
-                <div class="col-md-4">
-                  <img src="images/product1.png" class="img-fluid rounded-start" alt="...">
-                </div>
-                <div class="col-md-8">
-                  <div class="card-body cart-card-body">
-                    <h6 class="card-title blue">DISINFECTED SOLUTION</h6>
-                    <p class="card-text fw-bold">$500</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                      <div class="d-flex btn-outline-blue rounded" style="width: 50%;">
-                        <button type="button" class="quantity-left-minus btn btn-number" data-type="minus"
-                          data-field="">
-                          <i class="fas fa-minus"></i>
-                        </button>
-                        <input type="text" id="quantity" name="quantity"
-                          class="form-control text-center input-number fw-bold blue" value="1" min="1" max="100" />
-                        <button type="button" class="quantity-right-plus btn btn-number" data-type="plus" data-field="">
-                          <i class="fas fa-plus"></i>
-                        </button>
-                      </div>
-                      <div>
-                        <a class="blue ms-5 fw-normal" href="#">REMOVE</a>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="card mb-3 border-light" style="max-width: 540px;">
-              <div class="row g-0">
-                <div class="col-md-4">
-                  <img src="images/product1.png" class="img-fluid rounded-start" alt="...">
-                </div>
-                <div class="col-md-8">
-                  <div class="card-body cart-card-body">
-                    <h6 class="card-title blue">DISINFECTED SOLUTION</h6>
-                    <p class="card-text fw-bold">$500</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                      <div class="d-flex btn-outline-blue rounded" style="width: 50%;">
-                        <button type="button" class="quantity-left-minus btn btn-number" data-type="minus"
-                          data-field="">
-                          <i class="fas fa-minus"></i>
-                        </button>
-                        <input type="text" id="quantity" name="quantity"
-                          class="form-control text-center input-number fw-bold blue" value="1" min="1" max="100" />
-                        <button type="button" class="quantity-right-plus btn btn-number" data-type="plus" data-field="">
-                          <i class="fas fa-plus"></i>
-                        </button>
-                      </div>
-                      <div>
-                        <a class="blue ms-5 fw-normal" href="#">REMOVE</a>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <a href="/checkout" class="btn btn-blue w-100">CHECK OUT</a>
-        </div>
-      </div>
-    </div>
-  </div> -->
   {% include 'cart.html' %}
-
 
   <!-- cart Modal -->
 
@@ -420,6 +339,47 @@
         }
       });
     });
+  </script>
+  <script>
+    function priceChange(p){
+      var selectBox = document.getElementById("selectPrice");
+      document.getElementById("price").innerHTML = p[selectBox.selectedIndex-1]['price'];
+    }
+  </script>
+<script>
+    function plus() {
+      const num = document.getElementById(`quantity`)
+      var value = parseInt(num.value, 10);
+      value = isNaN(value) ? 0 : value;
+      value < 1 ? value = 1 : '';
+      value++;
+      num.value = value;
+    };
+
+
+    function minus() {
+      const num = document.getElementById(`quantity`)
+      var value = parseInt(num.value, 10);
+      value = isNaN(value) ? 0 : value;
+      value < 1 ? value = 1 : '';
+      value--;
+      num.value = Math.max(1,value);
+    }
+
+  </script>
+<script>
+    function addToCart(itemId) {
+      const quantity = document.getElementById("quantity")
+      $.ajax({
+        url: `/cart/${itemId}`,
+        type: 'POST',
+        headers: { 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value },
+        data: `{ "quantity": ${quantity.value} }`,
+        success: function () {
+          window.location.reload();
+        }
+      })
+    }
   </script>
 </body>
 

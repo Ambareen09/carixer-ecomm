@@ -175,7 +175,7 @@ def checkout(request):
 def productdetail(request, id):
     cart = cartItems(request)
     product = ProductSerializer().serialize(Product.objects.filter(pk=id), fields=[
-        'title', 'price', 'image', 'featured', 'short_description', 'long_description', 'reviews'])
+        'id', 'title', 'price', 'image', 'featured', 'short_description', 'long_description', 'reviews'])
     suggestions = ProductSerializer().serialize(Product.objects.all(), fields=[
         'id',   'title', 'price', 'image', 'featured', 'short_description', 'long_description', 'reviews'])
     product = [p['fields'] for p in json.loads(product)]
@@ -192,8 +192,9 @@ def productdetail(request, id):
         rates = [r['rate'] for r in reviews]
         p['rating'] = {'count': count, 'rate': sum(rates)/max(1, count)}
 
+    sizes = [{'id': p['id'], 'price':p['price'], 'size': p['size']} for p in product]
     return render(request, 'productdetail.html', {
-        "p": product[0], "suggestions": suggestions, "cart": cart
+        "p": product[0], "sizes": sizes, "suggestions": suggestions, "cart": cart
     })
 
 
@@ -207,4 +208,12 @@ class cartView(View):
             odo.save()
         else:
             odo.delete()
+        return HttpResponse({'msg': 'successful'})
+    
+    def post(self, request, id_):
+        data = json.loads(request.body.decode('utf-8'))
+        from datetime import date
+        odo = OrderDetail(user=request.user, status="INCART", date=date.today(),
+                        product=Product.objects.get(id=id_), quantity=data['quantity'])
+        odo.save()
         return HttpResponse({'msg': 'successful'})

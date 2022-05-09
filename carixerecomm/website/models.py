@@ -27,7 +27,9 @@ class BaseModel(models.Model):
 
 class Product(BaseModel):
     title = models.CharField(max_length=255)
-    price = models.JSONField(null=True)
+    price = models.IntegerField(null=True)
+    size = models.CharField(max_length=255)
+    stock = models.IntegerField()
     image = models.FileField(upload_to="website/static/images")
     featured = models.BooleanField(default=False)
     short_description = models.TextField(null=True)
@@ -55,7 +57,6 @@ class OrderDetail(BaseModel):
     status = models.CharField(choices=STATUS, max_length=255, null=True)
     date = models.DateField(null=True)
     order_id = models.CharField(max_length=255, null=True)
-    size = models.IntegerField(null=True)
     quantity = models.IntegerField(null=True)
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, null=True, related_name="orderedProduct")

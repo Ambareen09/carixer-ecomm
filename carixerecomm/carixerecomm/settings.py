@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     # new
     'website',
+    'adminpanel',
 ]
 
 MIDDLEWARE = [
@@ -59,7 +60,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.jinja2.Jinja2',
         'DIRS': [os.path.join(BASE_DIR, 'templates'),
-                 os.path.join(BASE_DIR, 'website', 'templates', 'website')],
+                 os.path.join(BASE_DIR, 'website', 'templates', 'website'),
+                 os.path.join(BASE_DIR, 'adminpanel', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

@@ -1,0 +1,73 @@
+<!-- Menu -->
+
+<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+    <div class="app-brand demo">
+        <a href="/adminpanel" class="app-brand-link ms-5">
+            <img src="/static/images/logo__1_.png" alt="" width="80">
+        </a>
+
+        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+            <i class="bx bx-chevron-left bx-sm align-middle"></i>
+        </a>
+    </div>
+
+    <div class="menu-inner-shadow"></div>
+
+    <ul class="menu-inner py-1">
+        <!-- Dashboard -->
+        <li {% if request.path=='/adminpanel/' %} class="menu-item active" {% else %} class="menu-item" {% endif %}>
+            <a href="/adminpanel/" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                <div data-i18n="Analytics">Dashboard</div>
+            </a>
+        </li>
+
+
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">PRODUCT</span>
+        </li>
+        <li {% if request.path=='/adminpanel/addproduct' %} class="menu-item active" {% else %} class="menu-item" {%
+            endif %}>
+            <a href="/adminpanel/addproduct" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-dock-top"></i>
+                <div data-i18n="Account Settings">Add New Product</div>
+            </a>
+        </li>
+        <li {% if request.path=='/adminpanel/productlist' %} class="menu-item active" {% else %} class="menu-item" {%
+            endif %}>
+            <a href="/adminpanel/productlist" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
+                <div data-i18n="Authentications">Product List</div>
+            </a>
+        </li>
+        <!-- Components -->
+        <li class="menu-header small text-uppercase"><span class="menu-header-text">Shipping</span></li>
+        <!-- Cards -->
+        <li {% if request.path=='/adminpanel/myshipments' %} class="menu-item active" {% else %} class="menu-item" {%
+            endif %}>
+            <a href="/adminpanel/myshipments" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-collection"></i>
+                <div data-i18n="Basic">My Shipments</div>
+            </a>
+        </li>
+        <!-- User interface -->
+        <li {% if request.path=='/adminpanel/orders' %} class="menu-item active" {% else %} class="menu-item" {% endif
+            %}>
+            <a href="/adminpanel/orders" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-box"></i>
+                <div data-i18n="User interface">Orders</div>
+            </a>
+        </li>
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">User management</span>
+        </li>
+        <li {% if request.path=='/adminpanel/users' %} class="menu-item active" {% else %} class="menu-item" {% endif
+            %}>
+            <a href="/adminpanel/users" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-dock-top"></i>
+                <div data-i18n="Account Settings">Users</div>
+            </a>
+        </li>
+    </ul>
+</aside>
+<!-- / Menu -->

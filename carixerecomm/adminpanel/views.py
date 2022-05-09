@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.forms import model_to_dict
 from django.shortcuts import render
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import user_passes_test
 from .forms import UploadProduct
 
 from website.serializers import ProductSerializer
@@ -52,7 +53,11 @@ def register(request):
         username=username, email=email, password=password)
     return index(request)
 
+def loginpage(request):
+    print("nuobkhgvf")
+    return render(request, 'adminpanel/login.html')
 
+@user_passes_test(lambda u: u.is_active and u.is_staff, login_url='panel/loginpage')
 def index(request):
     # about = list(About.objects.values())
     # cart = cartItems(request)

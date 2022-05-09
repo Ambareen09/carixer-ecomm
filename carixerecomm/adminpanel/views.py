@@ -3,9 +3,13 @@ import json
 from django.views import View
 from django.http import HttpResponse
 from django.forms import model_to_dict
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.forms import AuthenticationForm
+from django.core.exceptions import ValidationError
+
 from .forms import UploadProduct
 
 from website.serializers import ProductSerializer
@@ -54,21 +58,32 @@ def register(request):
     return index(request)
 
 def loginpage(request):
-    print("nuobkhgvf")
     return render(request, 'adminpanel/login.html')
 
-@user_passes_test(lambda u: u.is_active and u.is_staff, login_url='panel/loginpage')
+class StaffForm(AuthenticationForm):
+    def confirm_login_allowed(self, user):
+        if not user.is_active:
+            raise ValidationError(
+                self.error_messages["inactive"],
+                code="inactive",
+            )
+        if not user.is_staff:
+            raise ValidationError(
+                self.error_messages["invalid_login"],
+                code="invalid_login",
+                params={"username": self.username_field.verbose_name}
+            )
+
+class StaffLogin(LoginView):
+    form_class = AuthenticationForm
+    template_name = "adminpanel/login.html"
+
+
+
 def index(request):
-    # about = list(About.objects.values())
-    # cart = cartItems(request)
-    # products = ProductSerializer().serialize(Product.objects.all(), fields=[
-    #     'id',  'title', 'price', 'image', 'featured', 'short_description', 'long_description', 'reviews'])
-    # products = [p['fields'] for p in json.loads(products)]
-    # for p in products:
-    #     reviews = p['reviews']
-    #     count = len(reviews)
-    #     rates = [r['rate'] for r in reviews]
-    #     p['rating'] = {'count': count, 'rate': sum(rates)/max(1, count)}
+    user = request.user
+    if not (user.is_authenticated and user.is_active and user.is_staff):
+        return redirect('/panel/login')
     return render(request, 'adminpanel/index.html')
 
 

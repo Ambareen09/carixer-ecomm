@@ -41,18 +41,33 @@
             </a>
             <div style="display: flex; justify-content: flex-end;width: 33.33%;">
                 <button class="btn btn-outline-primary me-2 me-md-4" type="submit"><i
-                        class="fas fa-search"></i></button>
+                        class="fas fa-search" onclick="toggleSearchbar()"></i></button>
                 {% if request.user.is_authenticated %}
-                <button class="btn btn-outline-primary me-2 me-md-4" data-bs-toggle="modal" data-bs-target="#cartModal"
+                    <button class="btn btn-outline-primary me-2 me-md-4" data-bs-toggle="modal" data-bs-target="#cartModal"
                     type="submit"><i class="fas fa-shopping-bag"></i></button>
-                <a href="/logout">
-                    <button class="btn btn-outline-primary me-2 me-md-4"><i class="fas fa-sign-out"></i></button>
-                </a>
+                    <a href="/logout">
+                        <button class="btn btn-outline-primary me-2 me-md-4"><i class="fas fa-sign-out"></i></button>
+                    </a>
                 {% else %}
-                <button class="btn btn-outline-primary me-md-4" data-bs-toggle="modal" data-bs-target="#loginModal"
+                    <button class="btn btn-outline-primary me-md-4" data-bs-toggle="modal" data-bs-target="#loginModal"
                     type="submit"><i class="fas fa-user"></i></button>
+                {% endif %}
             </div>
-            {% endif %}
         </div>
     </nav>
+    <input style="display:none;" type="text" id="searchbar" value="" onchange="search(`${value}`)"/>
 </div>
+<script>
+    function toggleSearchbar(){
+        let searchbar = document.getElementById('searchbar');
+        if (searchbar.style.display=="block"){
+            searchbar.style = "display:none;"
+        } else {
+            searchbar.style = "display:block;"
+        }
+    }
+
+    function search(word){
+        window.location.href = window.location.origin+`/productlist?search=${word}`
+    }
+</script>

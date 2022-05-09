@@ -123,6 +123,7 @@ def orders(request):
         product = list(Product.objects.filter(id=o['product_id']).values())
         for p in product:
             o['title'] = p['title']
+            o['size'] = p['size']
             o['totalPrice'] = o['quantity']*p['price']
             o['save'] = o['totalPrice'] + 0.5*o['totalPrice']
         o['percentSave'] = 50
@@ -147,6 +148,7 @@ def ordersdetail(request, id):
         product = list(Product.objects.filter(id=o['product_id']).values())
         for p in product:
             o['title'] = p['title']
+            o['size'] = p['size']
             o['totalPrice'] = o['quantity']*p['price']
             o['save'] = o['totalPrice'] + 0.5*o['totalPrice']
         o['percentSave'] = 50

@@ -174,7 +174,8 @@ def checkout(request):
 
 def productdetail(request, id):
     cart = cartItems(request)
-    product = ProductSerializer().serialize(Product.objects.filter(pk=id), fields=[
+    product = Product.objects.get(id=id)
+    product = ProductSerializer().serialize(Product.objects.filter(title=product.title), fields=[
         'id', 'title', 'size', 'price', 'image', 'featured', 'short_description', 'long_description', 'reviews'])
     suggestions = ProductSerializer().serialize(Product.objects.all(), fields=[
         'id',   'title', 'price', 'image', 'featured', 'short_description', 'long_description', 'reviews'])
@@ -193,6 +194,7 @@ def productdetail(request, id):
         p['rating'] = {'count': count, 'rate': sum(rates)/max(1, count)}
 
     sizes = [{'id': p['id'], 'price':p['price'], 'size': p['size']} for p in product]
+    print(sizes)
     return render(request, 'productdetail.html', {
         "p": product[0], "sizes": sizes, "suggestions": suggestions, "cart": cart
     })

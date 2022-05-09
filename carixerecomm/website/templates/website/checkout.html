@@ -14,7 +14,7 @@
     integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script src="static/products.js"></script>
+  <!-- <script src="static/products.js"></script> -->
 </head>
 
 <body>
@@ -121,7 +121,7 @@
             <div class="card border-0 mb-3" style="max-width: 540px;">
               <div class="row g-0">
                 <div class="col-md-4">
-                  <img src="static/images/{{c.image}}" class="img-fluid rounded" width="110" alt="...">
+                  <img src="/{{c.image[8:]}}" class="img-fluid rounded" width="110" alt="...">
                 </div>
                 <div class="col-md-8">
                   <div class="card-body">
@@ -136,24 +136,6 @@
             </div>
           </div>
           {% endfor %}
-          <!-- <div class="d-flex justify-content-between align-items-center">
-            <div class="card border-0 mb-3" style="max-width: 540px;">
-              <div class="row g-0">
-                <div class="col-md-4">
-                  <img src="static/images/product1.png" class="img-fluid rounded" width="110" alt="...">
-                </div>
-                <div class="col-md-8">
-                  <div class="card-body">
-                    <h5 class="card-title">Disinfected Solution</h5>
-                    <p class="card-text">QTY: 05</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div>
-              <h5 class="blue">₹ 500</h5>
-            </div>
-          </div> -->
         </div>
         <hr>
         <div>

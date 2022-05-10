@@ -121,7 +121,7 @@
                 {% for o in orders %}
                 <tr>
                   <td>#{{o.order_id}}</td>
-                  <td><img src="{{o.image[8:]}}" width="40" alt=""> <strong>{{o.title}}</strong></td>
+                  <td><img src="/{{o.image[8:]}}" width="40" alt=""> <strong>{{o.title}}</strong></td>
                   <td>{{o.date.strftime('%d %B %y')}}</td>
                   <td>{{o.channel}}
                   </td>

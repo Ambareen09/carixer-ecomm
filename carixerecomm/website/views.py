@@ -83,17 +83,14 @@ def about(request):
 
 
 def productlist(request):
+    query_products = Product.objects.exclude(status="DRAFT")
     if 'search' in request.GET:
-        query_products = Product.objects.filter(
-            title__icontains=request.GET['search'])
+        query_products = query_products.filter(title__icontains=request.GET['search'])
         if 'sort' in request.GET:
             query_products = query_products.order_by(
                 ('-' if request.GET['sort'] == 'desc' else '')+'price')
     elif 'sort' in request.GET:
-        query_products = Product.objects.all().order_by(
-            ('-' if request.GET['sort'] == 'desc' else '')+'price')
-    else:
-        query_products = Product.objects.all()
+        query_products = query_products.order_by(('-' if request.GET['sort'] == 'desc' else '')+'price')
     products = ProductSerializer().serialize(query_products, fields=[
         'id',   'title', 'price', 'image', 'featured', 'short_description', 'long_description', 'reviews'])
     products = [p['fields'] for p in json.loads(products)]

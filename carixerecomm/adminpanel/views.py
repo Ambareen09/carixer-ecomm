@@ -122,7 +122,7 @@ class SingleProduct(View):
             p = Product.objects.get(id=id_)
             p.save()
         return HttpResponse({'msg': 'successful'})
-        
+
     def delete(self, request, id_):
         if Product.objects.filter(id=id_).exists():
             Product.objects.get(id=id_).delete()
@@ -160,12 +160,49 @@ def productlist(request):
 
 
 def myshipments(request):
-    return render(request, 'adminpanel/myshipments.html')
+    orders = list(OrderDetail.objects.exclude(status="INCART").values())
+    for o in orders:
+        product = list(Product.objects.filter(id=o['product_id']).values())
+        for p in product:
+            o['title'] = p['title']
+            o['image'] = p['image']
+            o['size'] = p['size']
+            o['totalPrice'] = o['quantity']*p['price']
+            o['save'] = o['totalPrice'] + 0.5*o['totalPrice']
+        o['percentSave'] = 50
+    return render(request, 'adminpanel/myshipments.html', {
+        "orders": orders
+    })
 
 
 def orders(request):
-    return render(request, 'adminpanel/orders.html')
+    if request.method=='GET':
+        orders = list(OrderDetail.objects.exclude(status="INCART").values())
+        for o in orders:
+            product = list(Product.objects.filter(id=o['product_id']).values())
+            for p in product:
+                o['title'] = p['title']
+                o['image'] = p['image']
+                o['size'] = p['size']
+                o['totalPrice'] = o['quantity']*p['price']
+                o['save'] = o['totalPrice'] + 0.5*o['totalPrice']
+            o['percentSave'] = 50
+        return render(request, 'adminpanel/orders.html', {
+            "orders": orders
+        })
+
+class SingleOrder(View):
+    def post(self, request, id_):
+        data = request.POST
+        odo = OrderDetail.objects.get(id=id_)
+        odo.tracking_number = data['tracking_number']
+        odo.save()
+        return HttpResponse({'msg': 'successful'})
+
 
 
 def users(request):
-    return render(request, 'adminpanel/users.html')
+    users = list(User.objects.all().values())
+    return render(request, 'adminpanel/users.html',{
+        "users": users
+    })

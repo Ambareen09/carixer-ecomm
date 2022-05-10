@@ -119,42 +119,17 @@
                 </tr>
               </thead>
               <tbody>
+                {% for o in orders %}
                 <tr>
-                  <td>#OD7645</td>
-                  <td><img src="images/product1.png" width="40" alt=""> <strong>Engine Oil</strong></td>
+                  <td>#{{o.order_id}}</td>
+                  <td><img src="/{{o.image[8:]}}" width="40" alt=""> <strong>{{o.title}}</strong></td>
                   <td><span class="badge bg-label-success me-1">Paid</span></td>
-                  <td>Gpay</td>
-                  <td><span class="badge bg-label-success me-1">Delivered</span></td>
-                  <td>05 Feb 2021</td>
-                  <td>500</td>
+                  <td>{{o.payment_method}}</td>
+                  <td><span class="badge bg-label-success me-1">{{o.status}}</span></td>
+                  <td>{{o.date}}</td>
+                  <td>{{o.totalPrice}}</td>
                 </tr>
-                <tr>
-                  <td>#OD7645</td>
-                  <td><img src="images/product1.png" width="40" alt=""> <strong>Engine Oil</strong></td>
-                  <td><span class="badge bg-label-warning me-1">COD</span></td>
-                  <td>Cash</td>
-                  <td><span class="badge bg-label-warning me-1">Returned</span></td>
-                  <td>05 Feb 2021</td>
-                  <td>500</td>
-                </tr>
-                <tr>
-                  <td>#OD7645</td>
-                  <td><img src="images/product1.png" width="40" alt=""> <strong>Engine Oil</strong></td>
-                  <td><span class="badge bg-label-danger me-1">Payment Failed</span></td>
-                  <td>Gpay</td>
-                  <td><span class="badge bg-label-danger me-1">Cancelled</span></td>
-                  <td>05 Feb 2021</td>
-                  <td>500</td>
-                </tr>
-                <tr>
-                  <td>#OD7645</td>
-                  <td><img src="images/product1.png" width="40" alt=""> <strong>Engine Oil</strong></td>
-                  <td><span class="badge bg-label-success me-1">Paid</span></td>
-                  <td>Gpay</td>
-                  <td><span class="badge bg-label-success me-1">Delivered</span></td>
-                  <td>05 Feb 2021</td>
-                  <td>500</td>
-                </tr>
+                {% endfor %}
               </tbody>
             </table>
           </div>

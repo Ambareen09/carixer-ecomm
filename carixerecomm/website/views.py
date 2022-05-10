@@ -41,15 +41,14 @@ def cartItems(request):
         o['percentSave'] = 50
         temp = (o['status'])
         o['status_color'] = ""
-        match temp:
-            case "DELIVERED":
-                o['status_color'] = "delivery"
-            case "ORDERED":
-                o['status_color'] = "order"
-            case "CANCELLED":
-                o['status_color'] = "cancel"
-            case default:
-                o['status_color'] = "cancel"
+        if temp=="DELIVERED":
+            o['status_color'] = "delivery"
+        elif temp=="ORDERED":
+            o['status_color'] = "order"
+        elif temp=="CANCELLED":
+            o['status_color'] = "cancel"
+        else:
+            o['status_color'] = "cancel"
     return cart
 
 
@@ -130,15 +129,14 @@ def orders(request):
         o['percentSave'] = 50
         temp = (o['status'])
         o['status_color'] = ""
-        match temp:
-            case "DELIVERED":
-                o['status_color'] = "delivery"
-            case "ORDERED":
-                o['status_color'] = "order"
-            case "CANCELLED":
-                o['status_color'] = "cancel"
-            case default:
-                o['status_color'] = "cancel"
+        if temp=="DELIVERED":
+            o['status_color'] = "delivery"
+        elif temp=="ORDERED":
+            o['status_color'] = "order"
+        elif temp=="CANCELLED":
+            o['status_color'] = "cancel"
+        else:
+            o['status_color'] = "cancel"
     return render(request, 'orders.html', {"orders": orders, "cart": cart})
 
 
@@ -155,15 +153,14 @@ def ordersdetail(request, id):
         o['percentSave'] = 50
         temp = (o['status'])
         o['status_color'] = ""
-        match temp:
-            case "DELIVERED":
-                o['status_color'] = "delivery"
-            case "ORDERED":
-                o['status_color'] = "order"
-            case "CANCELLED":
-                o['status_color'] = "cancel"
-            case default:
-                o['status_color'] = "cancel"
+        if temp=="DELIVERED":
+            o['status_color'] = "delivery"
+        elif temp=="ORDERED":
+            o['status_color'] = "order"
+        elif temp=="CANCELLED":
+            o['status_color'] = "cancel"
+        else:
+            o['status_color'] = "cancel"
         o['checkpoints'] = [model_to_dict(c) for c in DeliveryCheckpoint.objects.filter(
             order__id=id).order_by("transit_index")]
     return render(request, 'orderdetail.html', {"orders": orders, "cart": cart})

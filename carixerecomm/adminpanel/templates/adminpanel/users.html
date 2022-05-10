@@ -119,13 +119,15 @@
                 </tr>
               </thead>
               <tbody>
+                {% for u in users %}
                 <tr>
-                  <td>#UD7645</td>
-                  <td><strong>John Doe</strong></td>
-                  <td>johndoe@gmail.com</td>
-                  <td>john****</td>
-                  <td>15 Nov 2021</td>
-                  <td><span class="badge bg-label-success me-1">Active</span></td>
+                  <td>#{{u.id}}</td>
+                  <td><strong>{{u.username}}</strong></td>
+                  <!-- <td><strong>{{u.first_name}} {{u.last_name}}</strong></td> -->
+                  <td>{{u.email}}</td>
+                  <td>*********</td>
+                  <td>{{u.date_joined.strftime('%d %B %Y')}}</td>
+                  <td><span class='badge {{"bg-label-success" if u.is_active else "bg-label-danger"}} me-1'>{{Active if u.is_active else Inactive}}</span></td>
                   <td>
                     <div class="dropdown">
                       <button type="button" class="btn btn-primary" data-bs-toggle="modal"
@@ -133,48 +135,7 @@
                     </div>
                   </td>
                 </tr>
-                <tr>
-                  <td>#UD7645</td>
-                  <td><strong>John Doe</strong></td>
-                  <td>johndoe@gmail.com</td>
-                  <td>john****</td>
-                  <td>15 Nov 2021</td>
-                  <td><span class="badge bg-label-danger me-1">InActive</span></td>
-                  <td>
-                    <div class="dropdown">
-                      <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#trackorder">Edit</button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>#UD7645</td>
-                  <td><strong>John Doe</strong></td>
-                  <td>johndoe@gmail.com</td>
-                  <td>john****</td>
-                  <td>15 Nov 2021</td>
-                  <td><span class="badge bg-label-success me-1">Active</span></td>
-                  <td>
-                    <div class="dropdown">
-                      <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#trackorder">Edit</button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>#UD7645</td>
-                  <td><strong>John Doe</strong></td>
-                  <td>johndoe@gmail.com</td>
-                  <td>john****</td>
-                  <td>15 Nov 2021</td>
-                  <td><span class="badge bg-label-success me-1">Active</span></td>
-                  <td>
-                    <div class="dropdown">
-                      <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#trackorder">Edit</button>
-                    </div>
-                  </td>
-                </tr>
+                {% endfor %}
               </tbody>
             </table>
           </div>

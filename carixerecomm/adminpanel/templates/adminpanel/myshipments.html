@@ -118,62 +118,22 @@
                 </tr>
               </thead>
               <tbody>
+                {% for o in orders %}
                 <tr>
-                  <td>#OD7645</td>
-                  <td><img src="images/product1.png" width="40" alt=""> <strong>Engine Oil</strong></td>
-                  <td>05 Feb 2021</td>
-                  <td>Delhivery
+                  <td>#{{o.order_id}}</td>
+                  <td><img src="{{o.image[8:]}}" width="40" alt=""> <strong>{{o.title}}</strong></td>
+                  <td>{{o.date.strftime('%d %B %y')}}</td>
+                  <td>{{o.channel}}
                   </td>
-                  <td><span class="badge bg-label-success me-1">Ordered</span></td>
+                  <td><span class="badge bg-label-success me-1">{{o.status}}</span></td>
                   <td>
                     <div class="dropdown">
                       <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#trackorder">Proceed</button>
+                        data-bs-target="#trackorder{{o.id}}">Proceed</button>
                     </div>
                   </td>
                 </tr>
-                <tr>
-                  <td>#OD7645</td>
-                  <td><img src="images/product1.png" width="40" alt=""> <strong>Engine Oil</strong></td>
-                  <td>05 Feb 2021</td>
-                  <td>Delhivery
-                  </td>
-                  <td><span class="badge bg-label-success me-1">Ordered</span></td>
-                  <td>
-                    <div class="dropdown">
-                      <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#trackorder">Proceed</button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>#OD7645</td>
-                  <td><img src="images/product1.png" width="40" alt=""> <strong>Engine Oil</strong></td>
-                  <td>05 Feb 2021</td>
-                  <td>Delhivery
-                  </td>
-                  <td><span class="badge bg-label-success me-1">Ordered</span></td>
-                  <td>
-                    <div class="dropdown">
-                      <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#trackorder">Proceed</button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>#OD7645</td>
-                  <td><img src="images/product1.png" width="40" alt=""> <strong>Engine Oil</strong></td>
-                  <td>05 Feb 2021</td>
-                  <td>Delhivery
-                  </td>
-                  <td><span class="badge bg-label-success me-1">Ordered</span></td>
-                  <td>
-                    <div class="dropdown">
-                      <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#trackorder">Proceed</button>
-                    </div>
-                  </td>
-                </tr>
+                {% endfor %}
               </tbody>
             </table>
           </div>
@@ -188,32 +148,33 @@
   </div>
   <!-- / Layout wrapper -->
   <!-- track modal -->
-
-  <div class="modal fade" id="trackorder" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+{% for o in orders %}
+  <div class="modal fade" id="trackorder{{o.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-body" style="padding: 2rem;">
           <div class="d-flex justify-content-between align-items-center">
             <div>
               <span>Order ID :</span>
-              <h6 class="mt-2">#AZ7454</h6>
+              <h6 class="mt-2">#{{o.order_id}}</h6>
             </div>
             <div>
               <span>Date :</span>
-              <h6 class="mt-2">13 Nov 2022</h6>
+              <h6 class="mt-2">{{o.date.strftime('%d %B %y')}}</h6>
             </div>
           </div>
           <hr>
           <div class="form-floating mt-4">
-            <input type="text" class="form-control" id="floatingInput" placeholder="235363263573"
+            <input type="text" class="form-control" id="floatingInput{{o.id}}" placeholder="235363263573"
               aria-describedby="floatingInputHelp" />
             <label for="floatingInput">Enter Tracking Number</label>
-            <button class="btn btn-success w-100 mt-3">Submit</button>
+            <button class="btn btn-success w-100 mt-3" onclick="submitTracking({{o.id}})">Submit</button>
           </div>
         </div>
       </div>
     </div>
   </div>
+  {% endfor %}
 
   <!-- track modal -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -221,6 +182,21 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
+  <script>
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value
+    function submitTracking(itemId){
+      let trackingnum = document.getElementById(`floatingInput${itemId}`).value;
+      $.ajax({
+        url: `/panel/singleorder/${itemId}`,
+        type: 'POST',
+        headers: { 'X-CSRFToken': csrftoken },
+        data: { "tracking_number": `${trackingnum}` },
+        success: function () {
+          window.location.reload()
+        }
+      })
+    }
+  </script>
 </body>
 
 </html>

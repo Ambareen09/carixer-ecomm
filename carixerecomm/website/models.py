@@ -74,6 +74,8 @@ class OrderDetail(BaseModel):
     shipping_charge = models.FloatField(null=True, default=0)
     current_location = models.IntegerField(null=True)
     tracking_number = models.CharField(max_length=255)
+    payment_method = models.CharField(max_length=255)
+    channel = models.CharField(max_length=255)
 
     def __str__(self):
         return str(self.status) + " | " + str(self.first_name)

@@ -6,6 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.forms import model_to_dict
 from django.shortcuts import render
 from django.contrib.auth.models import User
+from django.contrib.auth.views import LoginView
 
 from .serializers import ProductSerializer
 from .models import Product, OrderDetail, About, Waterless, DeliveryCheckpoint
@@ -27,6 +28,8 @@ def register(request):
         username=username, email=email, password=password)
     return index(request)
 
+class UserLogin(LoginView):
+    
 
 def cartItems(request):
     cart = list(OrderDetail.objects.filter(

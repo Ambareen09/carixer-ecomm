@@ -30,6 +30,7 @@ def register(request):
         username=username, email=email, password=password)
     return index(request)
 
+
 class UserLogin(View):
     def post(self, request):
         data = request.POST
@@ -46,6 +47,7 @@ class UserLogin(View):
             messages.error(request, 'invalid credentials')
         return HttpResponseRedirect(request.headers['Referer'])
 
+
 def cartItems(request):
     cart = list(OrderDetail.objects.filter(
         user__id=request.user.id, status="INCART").values())
@@ -59,11 +61,11 @@ def cartItems(request):
         o['percentSave'] = 50
         temp = (o['status'])
         o['status_color'] = ""
-        if temp=="DELIVERED":
+        if temp == "DELIVERED":
             o['status_color'] = "delivery"
-        elif temp=="ORDERED":
+        elif temp == "ORDERED":
             o['status_color'] = "order"
-        elif temp=="CANCELLED":
+        elif temp == "CANCELLED":
             o['status_color'] = "cancel"
         else:
             o['status_color'] = "cancel"
@@ -103,12 +105,14 @@ def about(request):
 def productlist(request):
     query_products = Product.objects.exclude(status="DRAFT")
     if 'search' in request.GET:
-        query_products = query_products.filter(title__icontains=request.GET['search'])
+        query_products = query_products.filter(
+            title__icontains=request.GET['search'])
         if 'sort' in request.GET:
             query_products = query_products.order_by(
                 ('-' if request.GET['sort'] == 'desc' else '')+'price')
     elif 'sort' in request.GET:
-        query_products = query_products.order_by(('-' if request.GET['sort'] == 'desc' else '')+'price')
+        query_products = query_products.order_by(
+            ('-' if request.GET['sort'] == 'desc' else '')+'price')
     products = ProductSerializer().serialize(query_products, fields=[
         'id',   'title', 'price', 'image', 'featured', 'short_description', 'long_description', 'reviews'])
     products = [p['fields'] for p in json.loads(products)]
@@ -144,11 +148,11 @@ def orders(request):
         o['percentSave'] = 50
         temp = (o['status'])
         o['status_color'] = ""
-        if temp=="DELIVERED":
+        if temp == "DELIVERED":
             o['status_color'] = "delivery"
-        elif temp=="ORDERED":
+        elif temp == "ORDERED":
             o['status_color'] = "order"
-        elif temp=="CANCELLED":
+        elif temp == "CANCELLED":
             o['status_color'] = "cancel"
         else:
             o['status_color'] = "order"
@@ -168,11 +172,11 @@ def ordersdetail(request, id):
         o['percentSave'] = 50
         temp = (o['status'])
         o['status_color'] = ""
-        if temp=="DELIVERED":
+        if temp == "DELIVERED":
             o['status_color'] = "delivery"
-        elif temp=="ORDERED":
+        elif temp == "ORDERED":
             o['status_color'] = "order"
-        elif temp=="CANCELLED":
+        elif temp == "CANCELLED":
             o['status_color'] = "cancel"
         else:
             o['status_color'] = "cancel"

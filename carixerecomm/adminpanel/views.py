@@ -87,21 +87,49 @@ def index(request):
     return render(request, 'adminpanel/index.html')
 
 
-def addproduct(request):
-    if request.method == 'POST':
+class Products(View):
+    def post(self, request):
         title = request.POST.get('productname')
-        productDesc = request.POST.get('description')
+        product_desc = request.POST.get('description')
         image = request.POST.get('productimage')
         size = request.POST.get("size")
         price = request.POST.get("price")
         stock = request.POST.get("stock")
 
-        priceDict = {'size': size, 'price': price, 'stock': stock}
+        if Product.objects.filter(title=title, size=size).exists():
+            return HttpResponseRedirect('/panel/productlist')
+
         Product.objects.create(
-            title=title, long_description=productDesc, image=image, price=priceDict)
-        return HttpResponseRedirect('/adminpanel/productlist')
-    if request.method == 'GET':
-        return render(request, 'adminpanel/addproduct.html')
+            title=title, long_description=product_desc, image=image, price=price, size=size, stock=stock)
+        return HttpResponseRedirect('/panel/productlist')
+    
+    def get(self, request):
+        query_products = Product.objects.all()
+        products = ProductSerializer().serialize(query_products, fields=[
+            'id', 'title', 'size', 'price', 'stock', 'image', 'featured', 'short_description', 'long_description', 'reviews', 'status'])
+
+        products = [p['fields'] for p in json.loads(products)]
+        return render(request, 'adminpanel/productlist.html', {
+                    "products": products
+                })
+    
+    # def put(self, request):
+
+
+class SingleProduct(View):
+    def put(self, request, id_):
+        if Product.objects.filter(id=id_).exists():
+            p = Product.objects.get(id=id_)
+            p.save()
+        return HttpResponse({'msg': 'successful'})
+        
+    def delete(self, request, id_):
+        if Product.objects.filter(id=id_).exists():
+            Product.objects.get(id=id_).delete()
+        return HttpResponse({'msg': 'successful'})
+
+def addproduct(request):
+    return render(request, 'adminpanel/addproduct.html')
 
 
 def productlist(request):

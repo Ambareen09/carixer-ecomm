@@ -104,7 +104,7 @@
           <div class="card-header d-flex justify-content-between align-items-center">
 
             <h5>Product List</h5>
-            <a href="addproduct.html" class="btn btn-success">Add New Product</a>
+            <a href="addproduct" class="btn btn-success">Add New Product</a>
           </div>
           <div class="table-responsive">
             <table class="table card-table">
@@ -119,103 +119,31 @@
                 </tr>
               </thead>
               <tbody>
+                {% for p in products %}
                 <tr>
-                  <td><img src="images/product1.png" width="40" alt=""> <strong>Disinfected Solution</strong></td>
+                  <td><img src="{{p.image[8:]}}" width="40" alt=""> <strong>{{p.title}}</strong></td>
                   <td>
                     <div class="w-50">
-                      <select class="form-select btn-outline-blue" aria-label="Default select example">
-                        <option selected>400ml</option>
-                        <option value="2">800ml</option>
-                        <option value="3">1000ml</option>
+                      <select class="form-select btn-outline-blue" aria-label="Default select example" >
+                        <option selected>{{p.size}}</option>
                       </select>
                     </div>
                   </td>
 
-                  <td>100
+                  <td>{{p.price}}
                   </td>
-                  <td><span class="badge bg-label-success me-1">Published</span></td>
-                  <td>5</td>
+                  <td><span class='badge {{ "bg-label-success" if p.status == "PUBLISHED" else "bg-level-failure"}} me-1'>{{p.status}}</span></td>
+                  <td>{{p.stock}}</td>
                   <td>
                     <div class="dropdown">
                       <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                        data-bs-target="#viewproduct"><i class="fas fa-eye"></i></button>
+                        data-bs-target="#viewproduct{{p.id}}"><i class="fas fa-eye"></i></button>
                       <button type="button" class="btn btn-primary"><i class="fas fa-pen"></i></button>
-                      <button type="button" class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
+                      <button type="button" class="btn btn-outline-danger"><i class="fas fa-trash" onclick="deleteProduct({{p.id}})"></i></button>
                     </div>
                   </td>
                 </tr>
-                <tr>
-                  <td><img src="images/product1.png" width="40" alt=""> <strong>Engine Oil</strong></td>
-                  <td>
-                    <div class="w-50">
-                      <select class="form-select btn-outline-blue" aria-label="Default select example">
-                        <option selected>400ml</option>
-                        <option value="2">800ml</option>
-                        <option value="3">1000ml</option>
-                      </select>
-                    </div>
-                  </td>
-                  <td>100
-                  </td>
-                  <td><span class="badge bg-label-warning me-1">Draft</span></td>
-                  <td>5</td>
-                  <td>
-                    <div class="dropdown">
-                      <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                        data-bs-target="#viewproduct"><i class="fas fa-eye"></i></button>
-                      <button type="button" class="btn btn-primary"><i class="fas fa-pen"></i></button>
-                      <button type="button" class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td><img src="images/product1.png" width="40" alt=""> <strong>Engine Oil</strong></td>
-                  <td>
-                    <div class="w-50">
-                      <select class="form-select btn-outline-blue" aria-label="Default select example">
-                        <option selected>400ml</option>
-                        <option value="2">800ml</option>
-                        <option value="3">1000ml</option>
-                      </select>
-                    </div>
-                  </td>
-                  <td>100
-                  </td>
-                  <td><span class="badge bg-label-danger me-1">Sold Out</span></td>
-                  <td>5</td>
-                  <td>
-                    <div class="dropdown">
-                      <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                        data-bs-target="#viewproduct"><i class="fas fa-eye"></i></button>
-                      <button type="button" class="btn btn-primary"><i class="fas fa-pen"></i></button>
-                      <button type="button" class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td><img src="images/product1.png" width="40" alt=""> <strong>Engine Oil</strong></td>
-                  <td>
-                    <div class="w-50">
-                      <select class="form-select btn-outline-blue" aria-label="Default select example">
-                        <option selected>400ml</option>
-                        <option value="2">800ml</option>
-                        <option value="3">1000ml</option>
-                      </select>
-                    </div>
-                  </td>
-                  <td>100
-                  </td>
-                  <td><span class="badge bg-label-success me-1">Published</span></td>
-                  <td>5</td>
-                  <td>
-                    <div class="dropdown">
-                      <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                        data-bs-target="#viewproduct"><i class="fas fa-eye"></i></button>
-                      <button type="button" class="btn btn-primary"><i class="fas fa-pen"></i></button>
-                      <button type="button" class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
-                    </div>
-                  </td>
-                </tr>
+                {% endfor %}
               </tbody>
             </table>
           </div>
@@ -231,74 +159,40 @@
   <!-- / Layout wrapper -->
 
   <!-- track modal -->
-
-  <div class="modal fade" id="viewproduct" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  {% for p in products %}
+  <div class="modal fade" id="viewproduct{{p.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-body" style="padding: 2rem;">
           <div class="product_list container-xxl">
             <div class="d-flex justify-content-between align-items-center">
               <div class="w-50">
-                <img src="images/product1.png" width="90%" alt="" />
+                <img src="/{{p.image[8:]}}" width="90%" alt="" />
               </div>
               <div class="w-50">
-                <h3 class="blue fw-bold mb-3">DISINFECTED SOLUTION</h3>
+                <h3 class="blue fw-bold mb-3">{{p.title}}</h3>
                 <hr />
                 <p class="desc_para">
-                  Our product is safe, ecofriendly, biodegradable alternative to using
-                  soap and water. It protects the surface of the car from sun, rain
-                  and dust by active formation of Protective layer. Water resistance
-                  in glass surface (Driving in rainy condition) It gives you long
-                  lasting shine and quick cleaning with protection from exterior
-                  particles.
+                  {{p.short_description}}
                 </p>
                 <div class="d-flex justify-content-between align-items-center mt-5">
                   <div class="w-50">
                     <select class="form-select btn-outline-blue" aria-label="Default select example">
-                      <option selected>Select Size</option>
-                      <option value="1">400ml</option>
-                      <option value="2">800ml</option>
-                      <option value="3">1000ml</option>
+                      <!-- <option selected>Select Size</option> -->
+                      <option value="1">{{p.size}}</option>
+                      <!-- <option value="2">800ml</option>
+                      <option value="3">1000ml</option> -->
                     </select>
                   </div>
                   <div class="w-50 ms-4">
-                    <h3 class="fw-bold">$500</h3>
+                    <h3 class="fw-bold">$ {{p.price}}</h3>
                   </div>
                 </div>
               </div>
             </div>
             <div class="mt-5">
               <p class="desc_para">
-                Carixer Waterless car wash is a concentrated liquid that is diluted with 20-25 parts of water with the
-                ability
-                to soften and extract rapidly (with the aid of microfiber towel) sludge's, insects, stains and any dirt
-                from the
-                road surfaces of cars.
-              <p class="desc_para"> Looking for a wise way to clean your car? Then just choose our Waterless car wash
-                concentrate. Our Product is a great invention which absolutely Saves Water, Time & Money. The latest
-                technology
-                of using nanoparticles which not only cleans your filthy car but also ecofriendly which saves the earth
-                by
-                saving huge water loss.</p>
-              <p class="desc_para">
-                Waterless car wash liquid is a concentrated liquid, which is formulated with wax and other plant based
-                ecofriendly shining components, which helps to ensure your car tidy and glossy as brans new. Its an
-                ultimate
-                option to clean your vehicle easily and dirt-free with just 350ml - 500 of water. Follow the simple
-                steps to
-                complete your effortless detailing at home just spray, wipe (preferably microfiber towel) to get the
-                Glossy
-                look.
-              </p>
-              <p class="desc_para">
-                Our Waterless car wash concentrate is the best option if you ever wanted to witness the supreme shine
-                and
-                long-lasting protection to your paint. Waterless car wash concentrate allows you to easily dilute and
-                apply the
-                product later store it for future use. 20 Litre of Waterless car wash concentrate can clean up to 1260 –
-                1300
-                cars. Avail our products consisting of world-class quality and be stress-free.
-              </p>
+                {{p.long_description}}
               </p>
             </div>
           </div>
@@ -306,6 +200,7 @@
       </div>
     </div>
   </div>
+  {% endfor %}
 
   <!-- track modal -->
 
@@ -314,6 +209,20 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
+  
+  <script>
+    function deleteProduct(itemId){
+      const quantity = document.getElementById("quantity")
+      $.ajax({
+        url: `/panel/singleproduct/${itemId}`,
+        type: 'DELETE',
+        headers: { 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value },
+        success: function () {
+          window.location.reload();
+        }
+      })
+    }
+  </script>
 </body>
 
 </html>

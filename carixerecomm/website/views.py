@@ -171,7 +171,6 @@ def ordersdetail(request, id):
 
 def checkout(request):
     if request.method == 'POST':
-        user_id = request.user
         country = request.POST.get('country')
         first_name = request.POST.get('firstname')
         last_name = request.POST.get('lastname')
@@ -181,11 +180,19 @@ def checkout(request):
         city = request.POST.get('city')
         phone_number = request.POST.get('phonenumber')
         shipping_charge = request.POST.get('flexRadioDefault')
-        status = "ORDERED"
 
-        OrderDetail.objects.create(user=user_id, country=country, first_name=first_name, last_name=last_name,
-                                   address=address, apartment=apartment, postal_code=postal_code, city=city, phone_number=phone_number,
-                                   shipping_charge=shipping_charge, status=status)
+        for odo in OrderDetail.objects.filter(user__id=request.user.id, status="INCART"):
+            odo.country = country
+            odo.first_name = first_name
+            odo.last_name = last_name
+            odo.address = address
+            odo.apartment = apartment
+            odo.postal_code = postal_code
+            odo.city = city
+            odo.phone_number = phone_number
+            odo.shipping_charge = shipping_charge
+            odo.status = "ORDERED"
+            odo.save()
         return HttpResponseRedirect('/productlist')
 
     if request.method == 'GET':

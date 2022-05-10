@@ -34,6 +34,7 @@ class Product(BaseModel):
     featured = models.BooleanField(default=False)
     short_description = models.TextField(null=True)
     long_description = models.TextField(null=True)
+    status = models.CharField(max_length=255)
 
     def __str__(self):
         return str(self.title)

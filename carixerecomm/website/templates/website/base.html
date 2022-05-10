@@ -1,3 +1,10 @@
+{% if messages %}
+    {% for m in messages %}
+        <div class="alert alert-{{ m.tags }} m-1">
+            {{ m }}
+        </div>
+    {% endfor %}
+{% endif %}
 <div class="top_header">
     <span class="text-center">FREE SHIPPING FOR ALL ORDERS OVER $ 10 AND JUST A REMINDER, ALL OUR DELIVERIES ARECARBON
         NATURALAL</span>
@@ -58,6 +65,9 @@
     </nav>
     <input style="display:none;" type="text" id="searchbar" value="" onchange="search(`${value}`)"/>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
 <script>
     function toggleSearchbar(){
         let searchbar = document.getElementById('searchbar');

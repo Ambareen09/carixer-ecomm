@@ -75,7 +75,7 @@ class StaffForm(AuthenticationForm):
             )
 
 class StaffLogin(LoginView):
-    form_class = AuthenticationForm
+    form_class = StaffForm
     template_name = "adminpanel/login.html"
 
 

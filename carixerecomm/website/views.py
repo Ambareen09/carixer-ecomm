@@ -6,7 +6,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.forms import model_to_dict
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from django.contrib.auth.views import LoginView
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
+
 
 from .serializers import ProductSerializer
 from .models import Product, OrderDetail, About, Waterless, DeliveryCheckpoint
@@ -28,8 +30,21 @@ def register(request):
         username=username, email=email, password=password)
     return index(request)
 
-class UserLogin(LoginView):
-    
+class UserLogin(View):
+    def post(self, request):
+        data = request.POST
+        username = data['username']
+        password = data['password']
+        user = authenticate(username=username, password=password)
+        if user:
+            if user.is_active:
+                login(request, user)
+                messages.success(request, 'login succesful')
+            else:
+                messages.error(request, 'inactive account')
+        else:
+            messages.error(request, 'invalid credentials')
+        return HttpResponseRedirect(request.headers['Referer'])
 
 def cartItems(request):
     cart = list(OrderDetail.objects.filter(

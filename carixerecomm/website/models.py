@@ -8,6 +8,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 STATUS = {
     ("DELIVERED", "DELIVERED"),
     ("CANCELLED", "CANCELLED"),
+    ("INTRANSIT", "INTRANSIT"),
     ("ORDERED", "ORDERED"),
     ("INCART", "INCART"),
 }

@@ -136,7 +136,7 @@ def orders(request):
         elif temp=="CANCELLED":
             o['status_color'] = "cancel"
         else:
-            o['status_color'] = "cancel"
+            o['status_color'] = "order"
     return render(request, 'orders.html', {"orders": orders, "cart": cart})
 
 

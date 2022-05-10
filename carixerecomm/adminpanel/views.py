@@ -95,24 +95,41 @@ class Products(View):
         size = request.POST.get("size")
         price = request.POST.get("price")
         stock = request.POST.get("stock")
+        status = request.POST.get("status", "PUBLISHED")
 
         if Product.objects.filter(title=title, size=size).exists():
+            print(1654)
             return HttpResponseRedirect('/panel/productlist')
-
+        print(61846)
         Product.objects.create(
-            title=title, long_description=product_desc, image=image, price=price, size=size, stock=stock)
+            title=title, long_description=product_desc, image=image, price=price, size=size, stock=stock, status=status)
         return HttpResponseRedirect('/panel/productlist')
     
     def get(self, request):
-        query_products = Product.objects.all()
+        if 'search' in request.GET:
+            query_products = Product.objects.filter(title__icontains=request.GET['search'])
+            if 'sort' in request.GET:
+                query_products = query_products.order_by(
+                    ('-' if request.GET['sort'] == 'desc' else '')+'price')
+        elif 'sort' in request.GET:
+            query_products = Product.objects.all().order_by(
+                ('-' if request.GET['sort'] == 'desc' else '')+'price')
+        else:
+            query_products = Product.objects.all()
         products = ProductSerializer().serialize(query_products, fields=[
-            'id', 'title', 'size', 'price', 'stock', 'image', 'featured', 'short_description', 'long_description', 'reviews', 'status'])
-
+            'id',   'title', 'price', 'size', 'image', 'featured', 'stock', 'status','short_description', 'long_description'])
         products = [p['fields'] for p in json.loads(products)]
+        cart = cartItems(request)
+        for p in products:
+            reviews = p['reviews']
+            count = len(reviews)
+            rates = [r['rate'] for r in reviews]
+            p['rating'] = {'count': count, 'rate': sum(rates)/max(1, count)}
+
         return render(request, 'adminpanel/productlist.html', {
-                    "products": products
-                })
-    
+            "products": products, "cart": cart
+        })
+
     # def put(self, request):
 
 
@@ -130,33 +147,6 @@ class SingleProduct(View):
 
 def addproduct(request):
     return render(request, 'adminpanel/addproduct.html')
-
-
-def productlist(request):
-    if 'search' in request.GET:
-        query_products = Product.objects.filter(
-            title__icontains=request.GET['search'])
-        if 'sort' in request.GET:
-            query_products = query_products.order_by(
-                ('-' if request.GET['sort'] == 'desc' else '')+'price')
-    elif 'sort' in request.GET:
-        query_products = Product.objects.all().order_by(
-            ('-' if request.GET['sort'] == 'desc' else '')+'price')
-    else:
-        query_products = Product.objects.all()
-    products = ProductSerializer().serialize(query_products, fields=[
-        'id',   'title', 'price', 'image', 'featured', 'short_description', 'long_description', 'reviews'])
-    products = [p['fields'] for p in json.loads(products)]
-    cart = cartItems(request)
-    for p in products:
-        reviews = p['reviews']
-        count = len(reviews)
-        rates = [r['rate'] for r in reviews]
-        p['rating'] = {'count': count, 'rate': sum(rates)/max(1, count)}
-
-    return render(request, 'adminpanel/productlist.html', {
-        "products": products, "cart": cart
-    })
 
 
 def myshipments(request):
@@ -196,6 +186,7 @@ class SingleOrder(View):
         data = request.POST
         odo = OrderDetail.objects.get(id=id_)
         odo.tracking_number = data['tracking_number']
+        odo.status = "INTRANSIT"
         odo.save()
         return HttpResponse({'msg': 'successful'})
 

@@ -49,7 +49,7 @@
           class="card border-light text-center me-3 list_card" id={{p.id}}>
           <img src="/{{p.image[8:]}}" class="card-img-top img">
           <div class="card-body">
-            <h6 class="card-title blue fw-bold">'{{p.title}}</h6>
+            <h6 class="card-title blue fw-bold">{{p.title}}</h6>
             <p class="card-text blue fw-bold">₹ {{p.price}}</p>
             <p>
               {% for i in range(p.rating.rate|int)%}

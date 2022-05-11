@@ -4,6 +4,7 @@ from django.views import View
 from django.http import HttpResponse, HttpResponseRedirect
 from django.forms import model_to_dict
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.views import LoginView, LogoutView
@@ -59,6 +60,8 @@ def register(request):
 
 
 def loginpage(request):
+    if not request.user.is_authenticated:
+        messages.error(request, "Unauthorized User")
     return render(request, "adminpanel/login.html")
 
 
@@ -83,6 +86,11 @@ class StaffLogin(LoginView):
 
     def get_success_url(ignore):
         return "/panel"
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.error(request, "Unauthorized User")
+        return super().dispatch(request, *args, **kwargs)
 
 
 def index(request):

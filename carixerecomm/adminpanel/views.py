@@ -60,7 +60,9 @@ def register(request):
 
 
 def loginpage(request):
-    if not request.user.is_authenticated:
+    if request.headers["Referer"] == "http://127.0.0.1:8000/panel/":
+        messages.error(request, "Please Login")
+    elif not request.user.is_authenticated:
         messages.error(request, "Unauthorized User")
     return render(request, "adminpanel/login.html")
 
@@ -84,13 +86,19 @@ class StaffLogin(LoginView):
     form_class = StaffForm
     template_name = "adminpanel/login.html"
 
-    def get_success_url(ignore):
+    def get_success_url(self):
         return "/panel"
 
     def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
+        if request.headers["Referer"] == "http://127.0.0.1:8000/panel/":
+            messages.error(request, "Please Login")
+        elif not request.user.is_authenticated:
             messages.error(request, "Unauthorized User")
         return super().dispatch(request, *args, **kwargs)
+
+
+class StaffLogout(LogoutView):
+    next_page = "/panel/login"
 
 
 def index(request):

@@ -6,7 +6,7 @@ from django.forms import model_to_dict
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import user_passes_test
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 
@@ -80,7 +80,9 @@ class StaffForm(AuthenticationForm):
 class StaffLogin(LoginView):
     form_class = StaffForm
     template_name = "adminpanel/login.html"
-    redirect_authenticated_user = "adminpanel/index.html"
+
+    def get_success_url(ignore):
+        return "/panel"
 
 
 def index(request):

@@ -66,14 +66,22 @@
             </button>
           </div>
           <div>
+            {% if user.is_authenticated %}
             <button type="button" class="btn btn-outline-blue" onclick="addToCart({{p.id}})">
-              ADD TO CART
-            </button>
+              {% else %}
+              <button class="btn btn-outline-blue" data-bs-toggle="modal" data-bs-target="#loginModal" type="button">
+                {% endif %}
+                ADD TO CART
+              </button>
           </div>
           <div>
+            {% if user.is_authenticated %}
             <button type="button" class="btn btn-blue" onclick="buyNow({{p.id}})">
-              BUY IT NOW
-            </button>
+              {% else %}
+              <button class="btn btn-blue" data-bs-toggle="modal" data-bs-target="#loginModal" type="button">
+                {% endif %}
+                BUY IT NOW
+              </button>
           </div>
         </div>
       </div>
@@ -95,7 +103,7 @@
           class="card border-light text-center me-3 list_card" id={{p.id}}>
           <img src="/{{p.image[8:]}}" class="card-img-top img">
           <div class="card-body">
-            <h6 class="card-title blue fw-bold">'{{p.title}}</h6>
+            <h6 class="card-title blue fw-bold">{{p.title}}</h6>
             <p class="card-text blue fw-bold">₹ {{p.price}}</p>
             <p>
               {% for i in range(p.rating.rate|int)%}

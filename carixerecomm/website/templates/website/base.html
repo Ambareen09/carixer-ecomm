@@ -44,8 +44,10 @@
                 <button class="btn btn-outline-primary me-2 me-md-4" type="submit"><i class="fas fa-search"
                         onclick="toggleSearchbar()"></i></button>
                 {% if request.user.is_authenticated %}
-                <button class="btn btn-outline-primary me-2 me-md-4" data-bs-toggle="modal" data-bs-target="#cartModal"
-                    type="submit"><i class="fas fa-shopping-bag"></i></button>
+                <button id="cart-button" class="cart-bag btn btn-outline-primary me-2 me-md-4"
+                    data-totalitems="{{cart|length}}" data-cartitems="{{cart|map(attribute='id')|list}}"
+                    data-bs-toggle="modal" data-bs-target="#cartModal" type="submit"><i
+                        class="fas fa-shopping-bag"></i></button>
                 <a href="/logout">
                     <button class="btn btn-outline-primary me-2 me-md-4"><i class="fas fa-sign-out"></i></button>
                 </a>
@@ -92,6 +94,46 @@
 
             to {
                 opacity: 0;
+            }
+        }
+
+
+        .cart-bag:before {
+            content: attr(data-totalitems);
+            font-size: 12px;
+            font-weight: 600;
+            position: absolute;
+            top: 60%;
+            background: #d12b2b;
+            line-height: 24px;
+            padding: 0 5px;
+            height: 24px;
+            min-width: 24px;
+            color: white;
+            text-align: center;
+            border-radius: 24px;
+        }
+
+
+        .shake {
+            animation: shakeCart .4s ease-in-out forwards;
+        }
+
+        @keyframes shakeCart {
+            25% {
+                transform: translateX(6px)
+            }
+
+            50% {
+                transform: translateX(-4px);
+            }
+
+            75% {
+                transform: translateX(2px);
+            }
+
+            100% {
+                transform: translateX(0);
             }
         }
     </style>

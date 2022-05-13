@@ -76,7 +76,7 @@
           </div>
           <div>
             {% if user.is_authenticated %}
-            <button type="button" class="btn btn-blue" onclick="buyNow({{p.id}})">
+            <button id="add-to-cart" type="button" class="btn btn-blue" onclick="buyNow({{p.id}})">
               {% else %}
               <button class="btn btn-blue" data-bs-toggle="modal" data-bs-target="#loginModal" type="button">
                 {% endif %}
@@ -175,9 +175,7 @@
   <!-- User Login / Signup -->
 
   <!-- cart Modal -->
-
   {% include 'cart.html' %}
-
   <!-- cart Modal -->
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
@@ -241,6 +239,16 @@
   </script>
   <script>
     function addToCart(itemId) {
+
+      var cart = document.getElementById('cart-button');
+
+      setTimeout(function () {
+        cart.classList.add('shake');
+        setTimeout(function () {
+          cart.classList.remove('shake');
+        }, 500)
+      }, 1000)
+
       const quantity = document.getElementById("quantity")
       $.ajax({
         url: `/cart/${itemId}`,
@@ -248,7 +256,9 @@
         headers: { 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value },
         data: `{ "quantity": ${quantity.value} }`,
         success: function () {
-          window.location.reload();
+          setTimeout(function () {
+            window.location.reload();
+          }, 1000)
         }
       })
     }

@@ -4,7 +4,7 @@ import re
 from django.views import View
 from django.http import HttpResponse, HttpResponseRedirect
 from django.forms import model_to_dict
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
@@ -21,13 +21,13 @@ def register(request):
     email = data["email"]
 
     if User.objects.filter(username=username).exists():
-        return index(request)
+        return redirect("/")
 
     if User.objects.filter(email=email).exists():
-        return index(request)
+        return redirect("/")
 
     user = User.objects.create_user(username=username, email=email, password=password)
-    return index(request)
+    return redirect("/")
 
 
 class UserLogin(View):

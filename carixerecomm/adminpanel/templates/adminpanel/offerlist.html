@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/static/demo.css">
+  <link rel="stylesheet" href="/static/core.css" class="template-customizer-core-css" />
+  <link rel="stylesheet" href="/static/theme-default.css" class="template-customizer-theme-css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="/static/apex-charts/apex-charts.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+    rel="stylesheet" />
+  <script src="config.js"></script>
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+</head>
+
+<body>
+
+  <!-- Layout wrapper -->
+  <div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+      <!-- Menu -->
+
+      {% include 'adminpanel/base.html' %}
+      <!-- / Menu -->
+
+      <!-- Layout container -->
+      <div class="layout-page">
+        <!-- Navbar -->
+
+        {% include 'adminpanel/searchLogout.html' %}
+
+        <!-- / Navbar -->
+
+        <!-- Content wrapper -->
+        <div class="card m-5">
+          <div class="card-header d-flex justify-content-between align-items-center">
+
+            <h5>Product List</h5>
+            <a href="addoffer" class="btn btn-success">Add New Offer</a>
+          </div>
+          <div class="table-responsive">
+            <table class="table card-table">
+              <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>URL</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for p in offers %}
+                <tr>
+                  <td><img src="/{{p.image}}" width="40" alt=""> </td>
+                  <td>{{p.url}}</td>
+                  <td>
+                    <div class="dropdown">
+                      <!-- <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                        data-bs-target="#viewproduct{{p.id}}"><i class="fas fa-eye"></i></button>
+                      <button type="button" class="btn btn-primary"><i class="fas fa-pen"></i></button> -->
+                      <button type="button" class="btn btn-outline-danger"><i class="fas fa-trash"
+                          onclick="deleteProduct({{p.id}})"></i></button>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- Content wrapper -->
+      </div>
+      <!-- / Layout page -->
+    </div>
+
+    <!-- Overlay -->
+    <div class="layout-overlay layout-menu-toggle"></div>
+  </div>
+  <!-- / Layout wrapper -->
+
+  <!-- track modal -->
+  {% for p in products %}
+  <div class="modal fade" id="viewproduct{{p.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-body" style="padding: 2rem;">
+          <div class="product_list container-xxl">
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="w-50">
+                <img src="/{{p.image[8:]}}" width="90%" alt="" />
+              </div>
+              <div class="w-50">
+                <h3 class="blue fw-bold mb-3">{{p.title}}</h3>
+                <hr />
+                <p class="desc_para">
+                  {{p.short_description}}
+                </p>
+                <div class="d-flex justify-content-between align-items-center mt-5">
+                  <div class="w-50">
+                    <select class="form-select btn-outline-blue" aria-label="Default select example">
+                      <!-- <option selected>Select Size</option> -->
+                      <option value="1">{{p.size}}</option>
+                      <!-- <option value="2">800ml</option>
+                      <option value="3">1000ml</option> -->
+                    </select>
+                  </div>
+                  <div class="w-50 ms-4">
+                    <h3 class="fw-bold">$ {{p.price}}</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-5">
+              <p class="desc_para">
+                {{p.long_description}}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+  <!-- track modal -->
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+
+  <script>
+    function deleteProduct(itemId) {
+      const quantity = document.getElementById("quantity")
+      $.ajax({
+        url: `/panel/singleoffer/${itemId}`,
+        type: 'DELETE',
+        headers: { 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value },
+        success: function () {
+          window.location.reload();
+        }
+      })
+    }
+  </script>
+</body>
+
+</html>

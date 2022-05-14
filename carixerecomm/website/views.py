@@ -118,7 +118,7 @@ def index(request):
     about = list(About.objects.values())
     cart = cartItems(request)
     products = ProductSerializer().serialize(
-        Product.objects.all(),
+        Product.objects.filter(featured=True),
         fields=[
             "id",
             "title",

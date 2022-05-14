@@ -8,25 +8,35 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-
+from django.contrib.gis.geoip2 import GeoIP2
 
 from .serializers import ProductSerializer
-from .models import Product, OrderDetail, About, Waterless, DeliveryCheckpoint
+from .models import Product, OrderDetail, About, Waterless, DeliveryCheckpoint, Profile
 
 
 def register(request):
     data = request.POST
     username = data["username"]
     password = data["password"]
-    email = data["email"]
+    email = data.get("email", "")
+    phone_number = data.get("phone_number", "")
 
     if User.objects.filter(username=username).exists():
+        messages.error(request, "user with username already exists")
         return redirect("/")
 
-    if User.objects.filter(email=email).exists():
-        return redirect("/")
+    if email:
+        if Profile.objects.filter(email=email).exists():
+            messages.error(request, "user with this email already exists")
+            return redirect("/")
+    else:
+        if Profile.objects.filter(phone_number=phone_number).exists():
+            messages.error(request, "user with this phone number already exists")
+            return redirect("/")
 
     user = User.objects.create_user(username=username, email=email, password=password)
+    Profile.objects.create(user=user, email=email, phone_number=phone_number)
+    messages.success(request, "account successfully created")
     return redirect("/")
 
 
@@ -36,9 +46,14 @@ class UserLogin(View):
         username = data["username"]
         password = data["password"]
         user = authenticate(username=username, password=password)
+        g = GeoIP2()
+
         if user:
             if user.is_active:
                 login(request, user)
+                Profile.objects.get(user=user).location = g.country(
+                    request.META["REMOTE_ADDR"]
+                )
                 messages.success(request, "login succesful")
             else:
                 messages.error(request, "inactive account")

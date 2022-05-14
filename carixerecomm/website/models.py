@@ -5,6 +5,7 @@ from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
 
 from django.core.validators import MaxValueValidator, MinValueValidator
+
 STATUS = {
     ("DELIVERED", "DELIVERED"),
     ("CANCELLED", "CANCELLED"),
@@ -14,7 +15,9 @@ STATUS = {
 }
 
 phone_regex = RegexValidator(
-    regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+    regex=r"^\+?1?\d{9,15}$",
+    message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.",
+)
 
 
 class BaseModel(models.Model):
@@ -24,6 +27,18 @@ class BaseModel(models.Model):
 
     class Meta:
         abstract = True
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField(max_length=500, blank=True)
+    location = models.CharField(max_length=30, blank=True)
+    birth_date = models.DateField(null=True, blank=True)
+    phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True)
+    email = models.CharField(max_length=30, blank=True)
+
+    def __str__(self):
+        return str(self.user.username)
 
 
 class Product(BaseModel):
@@ -36,6 +51,7 @@ class Product(BaseModel):
     short_description = models.TextField(null=True)
     long_description = models.TextField(null=True)
     status = models.CharField(max_length=255)
+    discount = models.FloatField(default=0)
 
     def __str__(self):
         return str(self.title)
@@ -44,8 +60,7 @@ class Product(BaseModel):
 class Review(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     rate = models.IntegerField(
-        default=1,
-        validators=[MinValueValidator(0), MaxValueValidator(5)]
+        default=1, validators=[MinValueValidator(0), MaxValueValidator(5)]
     )
     comment = models.TextField()
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -61,7 +76,8 @@ class OrderDetail(BaseModel):
     order_id = models.CharField(max_length=255, null=True)
     quantity = models.IntegerField(null=True)
     product = models.ForeignKey(
-        Product, on_delete=models.CASCADE, null=True, related_name="orderedProduct")
+        Product, on_delete=models.CASCADE, null=True, related_name="orderedProduct"
+    )
     country = models.CharField(max_length=255, null=True)
     first_name = models.CharField(max_length=255, null=True)
     last_name = models.CharField(max_length=255, null=True)
@@ -69,8 +85,7 @@ class OrderDetail(BaseModel):
     apartment = models.CharField(max_length=255, null=True)
     postal_code = models.CharField(max_length=255, null=True)
     city = models.CharField(max_length=255, null=True)
-    phone_number = models.CharField(
-        validators=[phone_regex], max_length=17, blank=True)
+    phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True)
     free_shipping = models.BooleanField(default=True)
     shipping_charge = models.FloatField(null=True, default=0)
     current_location = models.IntegerField(null=True)
@@ -85,7 +100,8 @@ class OrderDetail(BaseModel):
 class DeliveryCheckpoint(BaseModel):
     transit_index = models.IntegerField()
     order = models.ForeignKey(
-        OrderDetail, on_delete=models.CASCADE, null=True, related_name="transitPoint")
+        OrderDetail, on_delete=models.CASCADE, null=True, related_name="transitPoint"
+    )
     message = models.CharField(max_length=255)
     time = models.DateTimeField()
     location = models.CharField(max_length=255)
@@ -111,3 +127,4 @@ admin.site.register(OrderDetail)
 admin.site.register(DeliveryCheckpoint)
 admin.site.register(About)
 admin.site.register(Waterless)
+admin.site.register(Profile)

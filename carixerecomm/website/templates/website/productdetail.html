@@ -246,8 +246,8 @@
         cart.classList.add('shake');
         setTimeout(function () {
           cart.classList.remove('shake');
-        }, 500)
-      }, 1000)
+        }, 300)
+      }, 600)
 
       const quantity = document.getElementById("quantity")
       $.ajax({
@@ -258,7 +258,7 @@
         success: function () {
           setTimeout(function () {
             window.location.reload();
-          }, 1000)
+          }, 750)
         }
       })
     }

@@ -29,10 +29,13 @@ def register(request):
         if Profile.objects.filter(email=email).exists():
             messages.error(request, "user with this email already exists")
             return redirect("/")
-    else:
+    elif phone_number:
         if Profile.objects.filter(phone_number=phone_number).exists():
             messages.error(request, "user with this phone number already exists")
             return redirect("/")
+    else:
+        messages.error(request, "please provide either email or phone number")
+        return redirect("/")
 
     user = User.objects.create_user(username=username, email=email, password=password)
     Profile.objects.create(user=user, email=email, phone_number=phone_number)
@@ -51,9 +54,9 @@ class UserLogin(View):
         if user:
             if user.is_active:
                 login(request, user)
-                Profile.objects.get(user=user).location = g.country(
-                    request.META["REMOTE_ADDR"]
-                )
+                profile = Profile.objects.get(user=user)
+                # profile.location = g.country(request.META["REMOTE_ADDR"])
+                profile.save()
                 messages.success(request, "login succesful")
             else:
                 messages.error(request, "inactive account")
@@ -162,6 +165,43 @@ def productlist(request):
         p["rating"] = {"count": count, "rate": sum(rates) / max(1, count)}
 
     return render(request, "productlist.html", {"products": products, "cart": cart})
+
+
+def offers(request):
+    query_products = Product.objects.exclude(status="DRAFT").filter(discount__gt=0)
+    if "search" in request.GET:
+        query_products = query_products.filter(title__icontains=request.GET["search"])
+        if "sort" in request.GET:
+            query_products = query_products.order_by(
+                ("-" if request.GET["sort"] == "desc" else "") + "price"
+            )
+    elif "sort" in request.GET:
+        query_products = query_products.order_by(
+            ("-" if request.GET["sort"] == "desc" else "") + "price"
+        )
+    products = ProductSerializer().serialize(
+        query_products,
+        fields=[
+            "id",
+            "title",
+            "price",
+            "discount",
+            "image",
+            "featured",
+            "short_description",
+            "long_description",
+            "reviews",
+        ],
+    )
+    products = [p["fields"] for p in json.loads(products)]
+    cart = cartItems(request)
+    for p in products:
+        reviews = p["reviews"]
+        count = len(reviews)
+        rates = [r["rate"] for r in reviews]
+        p["rating"] = {"count": count, "rate": sum(rates) / max(1, count)}
+
+    return render(request, "offerlist.html", {"products": products, "cart": cart})
 
 
 def waterless(request):

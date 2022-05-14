@@ -11,7 +11,15 @@ from django.contrib.auth import authenticate, login
 from django.contrib.gis.geoip2 import GeoIP2
 
 from .serializers import ProductSerializer
-from .models import Product, OrderDetail, About, Waterless, DeliveryCheckpoint, Profile
+from .models import (
+    Product,
+    OrderDetail,
+    About,
+    Waterless,
+    DeliveryCheckpoint,
+    Profile,
+    OfferBanner,
+)
 
 
 def register(request):
@@ -128,8 +136,12 @@ def index(request):
         count = len(reviews)
         rates = [r["rate"] for r in reviews]
         p["rating"] = {"count": count, "rate": sum(rates) / max(1, count)}
+
+    banners = [model_to_dict(b) for b in OfferBanner.objects.all()]
     return render(
-        request, "index.html", {"products": products, "about": about, "cart": cart}
+        request,
+        "index.html",
+        {"products": products, "about": about, "cart": cart, "banners": banners},
     )
 
 

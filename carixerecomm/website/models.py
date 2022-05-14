@@ -121,6 +121,11 @@ class Waterless(BaseModel):
     waterless = models.TextField(null=True)
 
 
+class OfferBanner(BaseModel):
+    image = models.FileField(upload_to="website/static/images/offers")
+    url = models.CharField(max_length=255)
+
+
 admin.site.register(Product)
 admin.site.register(Review)
 admin.site.register(OrderDetail)

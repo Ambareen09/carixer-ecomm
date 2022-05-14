@@ -40,6 +40,22 @@
                 <div data-i18n="Authentications">Product List</div>
             </a>
         </li>
+
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">OFFERS</span>
+        </li>
+        <li {% if request.path=='/panel/addoffer' %} class="menu-item active" {% else %} class="menu-item" {% endif %}>
+            <a href="/panel/addoffer" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-dock-top"></i>
+                <div data-i18n="Account Settings">Add New Offer</div>
+            </a>
+        </li>
+        <li {% if request.path=='/panel/offerlist' %} class="menu-item active" {% else %} class="menu-item" {% endif %}>
+            <a href="/panel/offerlist" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
+                <div data-i18n="Authentications">Offer List</div>
+            </a>
+        </li>
         <!-- Components -->
         <li class="menu-header small text-uppercase"><span class="menu-header-text">Shipping</span></li>
         <!-- Cards -->
@@ -71,7 +87,7 @@
 <!-- / Menu -->
 
 <script>
-    function adminSearch(word){
-        window.location.href = window.location.origin+`/panel/productlist?search=${word}`
+    function adminSearch(word) {
+        window.location.href = window.location.origin + `/panel/productlist?search=${word}`
     }
 </script>

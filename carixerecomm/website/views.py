@@ -65,10 +65,19 @@ class UserLogin(View):
         return HttpResponseRedirect(request.headers["Referer"])
 
 
-def cartItems(request):
-    cart = list(
-        OrderDetail.objects.filter(user__id=request.user.id, status="INCART").values()
-    )
+def cartItems(request, ids=None):
+    if ids:
+        cart = list(
+            OrderDetail.objects.filter(
+                id__in=ids, user__id=request.user.id, status="INCART"
+            ).values()
+        )
+    else:
+        cart = list(
+            OrderDetail.objects.filter(
+                user__id=request.user.id, status="INCART"
+            ).values()
+        )
     for o in cart:
         p = Product.objects.get(id=o["product_id"])
         o["title"] = p.title
@@ -92,7 +101,6 @@ def cartItems(request):
 
 def cart(cartItems):
     cartList = {"grandTotal": 0}
-    print(cartItems)
     for c in cartItems:
         cartList["grandTotal"] += c["totalPrice"]
     return cartList
@@ -294,7 +302,11 @@ def checkout(request):
         return HttpResponseRedirect("/productlist")
 
     if request.method == "GET":
-        cartItem = cartItems(request)
+        items = request.GET.get("items", None)
+        ids = None
+        if items:
+            ids = list(map(int, json.loads(items)))
+        cartItem = cartItems(request, ids)
         carts = cart(cartItem)
         return render(request, "checkout.html", {"cartItems": cartItem, "cart": carts})
 

@@ -48,7 +48,7 @@
         <a style="text-decoration:none; color:#000;" href="productdetail/{{p.id}}"
           class="card border-light text-center me-3 list_card" id={{p.id}}>
           <img src="/{{p.image[8:]}}" class="card-img-top img">
-          <div class="card-body" data-discount="{{p.discount}}">
+          <div class="offer-body card-body" data-discount="{{p.discount}}">
             <h6 class="card-title blue fw-bold">{{p.title}}</h6>
             <p class="card-text blue fw-bold">₹ {{p.price}}</p>
             <p>
@@ -120,7 +120,7 @@
   <!-- cart Modal -->
 
   <style>
-    .card-body::before {
+    .offer-body::before {
       content: attr(data-discount) "% OFF";
       position: absolute;
       top: -1%;

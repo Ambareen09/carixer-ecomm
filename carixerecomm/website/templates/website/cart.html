@@ -11,6 +11,7 @@
         <div>
           <div class="card mb-3 border-light" style="max-width: 540px;">
             {% for c in cart %}
+            <input type="checkbox" id="cb{{c.id}}" name="cart-cb" value="{{c.id}}" checked="1">
             <div class="row g-0" id="cartItem{{c.id}}">
               <div class="col-md-4">
                 <img src="/{{c.image[8:]}}" class="img-fluid rounded-start" alt="...">
@@ -45,7 +46,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <a href="/checkout" class="btn btn-blue w-100">CHECK OUT</a>
+        <a onclick="checkout()" class="btn btn-blue w-100">CHECK OUT</a>
       </div>
     </div>
   </div>
@@ -53,6 +54,17 @@
 
 <script>
   const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  function checkout() {
+    var checkboxes = document.getElementsByName('cart-cb');
+    var checks = [];
+    checkboxes.forEach(element => {
+      if (element.checked) {
+        checks.push(element.value);
+      }
+    });
+    window.location = encodeURI(`/checkout?items=[${checks}]`)
+  }
+
   function cartPlus(itemId, price) {
     const num = document.getElementById(`number${itemId}`)
     var value = parseInt(num.value, 10);
@@ -66,7 +78,7 @@
       data: `{ "quantity" : ${value} }`,
       success: function () {
         num.value = value;
-        document.getElementById(`totalPrice${itemId}`).innerHTML = '$'+price*value;
+        document.getElementById(`totalPrice${itemId}`).innerHTML = '$' + price * value;
       }
     })
   };
@@ -85,8 +97,8 @@
       data: `{ "quantity" : ${value} }`,
       success: function () {
         num.value = value;
-        document.getElementById(`totalPrice${itemId}`).innerHTML = '$'+price*value;
-        console.log(price,value,price*value);
+        document.getElementById(`totalPrice${itemId}`).innerHTML = '$' + price * value;
+        console.log(price, value, price * value);
       }
     })
   }
@@ -103,7 +115,7 @@
       data: `{ "quantity" : ${value} }`,
       success: function () {
         num.value = value;
-        document.getElementById(`totalPrice${itemId}`).innerHTML = '$'+price*value;
+        document.getElementById(`totalPrice${itemId}`).innerHTML = '$' + price * value;
       }
     })
   }

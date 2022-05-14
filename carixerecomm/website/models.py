@@ -54,7 +54,7 @@ class Product(BaseModel):
     discount = models.FloatField(default=0)
 
     def __str__(self):
-        return str(self.title)
+        return str(self.title) + "|" + str(self.size)
 
 
 class Review(BaseModel):

@@ -135,7 +135,11 @@
               </div>
             </div>
             <div>
-              <h5 name="totalPrice" class="blue">₹ {{c.totalPrice}}</h5>
+              {% if c.discount <= 0 %} <h5 name="totalPrice" class="blue">₹ {{c.totalPrice}}</h5>
+                {% else %}
+                <h7 name="originalPrice" style="text-decoration:line-through;" class="blue">₹ {{c.totalPrice}}</h7>
+                <h5 name="totalPrice" class="blue">₹ {{(100-c.discount)/100*c.totalPrice}}</h5>
+                {% endif %}
             </div>
           </div>
           {% endfor %}

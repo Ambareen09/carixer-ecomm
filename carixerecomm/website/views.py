@@ -92,9 +92,10 @@ def cartItems(request, ids=None):
         o["title"] = p.title
         o["image"] = str(p.image)
         o["price"] = p.price
-        o["totalPrice"] = o["quantity"] * p.price
+        o["totalPrice"] = o["quantity"] * p.price * (100 - p.discount) / 100
         o["save"] = o["totalPrice"] + 0.5 * o["totalPrice"]
         o["percentSave"] = 50
+        o["discount"] = p.discount
         temp = o["status"]
         o["status_color"] = ""
         if temp == "DELIVERED":
@@ -343,6 +344,7 @@ def productdetail(request, id):
             "title",
             "size",
             "price",
+            "discount",
             "image",
             "featured",
             "short_description",
@@ -378,8 +380,15 @@ def productdetail(request, id):
         rates = [r["rate"] for r in reviews]
         p["rating"] = {"count": count, "rate": sum(rates) / max(1, count)}
 
-    sizes = [{"id": p["id"], "price": p["price"], "size": p["size"]} for p in product]
-    print(sizes)
+    sizes = [
+        {
+            "id": p["id"],
+            "price": p["price"],
+            "size": p["size"],
+            "discount": p["discount"],
+        }
+        for p in product
+    ]
     return render(
         request,
         "productdetail.html",

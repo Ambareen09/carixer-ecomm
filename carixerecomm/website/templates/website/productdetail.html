@@ -123,11 +123,12 @@
             <select id='selectPrice' class="form-select btn-outline-blue" aria-label="Default select example"
               onloadeddata="priceChange({{sizes}})" onchange="priceChange({{sizes}})">
               {% for s in sizes%}
-              <option id="{{loop.index}}" value="{{s.size}}">{{s.size}}</option>
+              <option id="size{{loop.index}}" data-sizeid="{{s.id}}" value="{{s.size}}">{{s.size}}</option>
               {% endfor %}
             </select>
           </div>
           <div class="w-50 ms-4">
+            <h4 id='origin-price' style="text-decoration: line-through; color: #8f8f8f;" class="fw-bold"></h4>
             <h3 id='price' class="fw-bold">$ {{p.price}}</h3>
           </div>
         </div>
@@ -146,7 +147,7 @@
           </div>
           <div>
             {% if user.is_authenticated %}
-            <button type="button" class="btn btn-outline-blue" onclick="addToCart({{p.id}})">
+            <button type="button" class="btn btn-outline-blue" onclick="addToCart()">
               {% else %}
               <button class="btn btn-outline-blue" data-bs-toggle="modal" data-bs-target="#loginModal" type="button">
                 {% endif %}
@@ -352,7 +353,10 @@
     <script>
       function priceChange(p) {
         var selectBox = document.getElementById("selectPrice");
-        document.getElementById("price").innerHTML = '$ ' + p[selectBox.selectedIndex]['price'];
+        if (p[selectBox.selectedIndex]['discount'] > 0) {
+          document.getElementById("origin-price").innerHTML = '$ ' + p[selectBox.selectedIndex]['price'];
+        }
+        document.getElementById("price").innerHTML = '$ ' + String((100 - Number(p[selectBox.selectedIndex]['discount'])) * Number(p[selectBox.selectedIndex]['price']));
       }
     </script>
     <script>
@@ -377,8 +381,8 @@
 
     </script>
     <script>
-      function addToCart(itemId) {
-
+      function addToCart() {
+        var selectBox = document.getElementById("selectPrice");
         var cart = document.getElementById('cart-button');
 
         setTimeout(function () {
@@ -389,6 +393,8 @@
         }, 600)
 
         const quantity = document.getElementById("quantity")
+        console.log("size" + String(selectBox.selectedIndex + 1))
+        var itemId = document.getElementById("size" + String(selectBox.selectedIndex + 1)).getAttribute("data-sizeid");
         $.ajax({
           url: `/cart/${itemId}`,
           type: 'POST',

@@ -1,78 +1,94 @@
 from django.core.serializers.json import Serializer
 from django.forms.models import model_to_dict
 
-from .models import Review, OrderDetail
+from .models import Review, OrderDetail, User
 
 JSON_ALLOWED_OBJECTS = (dict, list, tuple, str, int, bool, float)
 
 
 class ProductSerializer(Serializer):
-
     def end_object(self, obj):
         for field in self.selected_fields:
-            if field == 'pk' or field in self._current:
+            if field == "pk" or field in self._current:
                 continue
             else:
                 try:
-                    if '__' in field:
-                        fields = field.split('__')
+                    if "__" in field:
+                        fields = field.split("__")
                         value = obj
                         for f in fields:
                             value = getattr(value, f)
-                        if value != obj and isinstance(value, JSON_ALLOWED_OBJECTS) or value is None:
+                        if (
+                            value != obj
+                            and isinstance(value, JSON_ALLOWED_OBJECTS)
+                            or value is None
+                        ):
                             self._current[field] = value
                     else:
                         try:
                             self._current[field] = getattr(
-                                obj, field)()  # for model methods
+                                obj, field
+                            )()  # for model methods
                             continue
                         except TypeError:
                             pass
                         try:
                             self._current[field] = getattr(
-                                obj, field)  # for property methods
+                                obj, field
+                            )  # for property methods
                             continue
                         except AttributeError:
                             pass
 
                 except AttributeError:
                     pass
-        self._current['reviews'] = [model_to_dict(
-            review) for review in Review.objects.filter(product=getattr(obj, 'pk'))]
+        self._current["reviews"] = []
+        for review in Review.objects.filter(product=getattr(obj, "pk")).values():
+            r_dict = review
+            r_dict["user"] = User.objects.get(id=r_dict["user_id"]).username
+            r_dict["created"] = review["created"].strftime("%d %B %Y")
+            self._current["reviews"].append(r_dict)
         super(ProductSerializer, self).end_object(obj)
 
 
 class OrderDetailSerializer(Serializer):
-
     def end_object(self, obj):
         for field in self.selected_fields:
-            if field == 'pk' or field in self._current:
+            if field == "pk" or field in self._current:
                 continue
             else:
                 try:
-                    if '__' in field:
-                        fields = field.split('__')
+                    if "__" in field:
+                        fields = field.split("__")
                         value = obj
                         for f in fields:
                             value = getattr(value, f)
-                        if value != obj and isinstance(value, JSON_ALLOWED_OBJECTS) or value is None:
+                        if (
+                            value != obj
+                            and isinstance(value, JSON_ALLOWED_OBJECTS)
+                            or value is None
+                        ):
                             self._current[field] = value
                     else:
                         try:
                             self._current[field] = getattr(
-                                obj, field)()  # for model methods
+                                obj, field
+                            )()  # for model methods
                             continue
                         except TypeError:
                             pass
                         try:
                             self._current[field] = getattr(
-                                obj, field)  # for property methods
+                                obj, field
+                            )  # for property methods
                             continue
                         except AttributeError:
                             pass
 
                 except AttributeError:
                     pass
-        self._current['orders'] = [model_to_dict(
-            review) for review in OrderDetail.objects.filter(product=getattr(obj, 'pk'))]
+        self._current["orders"] = [
+            model_to_dict(review)
+            for review in OrderDetail.objects.filter(product=getattr(obj, "pk"))
+        ]
         super(OrderDetailSerializer, self).end_object(obj)

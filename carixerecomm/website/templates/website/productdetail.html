@@ -129,36 +129,18 @@
           <h6 class="second_heading">RATINGS & REVIEWS</h6>
         </div>
         <div class="mb-3">
+          {% for r in p.reviews %}
           <div class="border ps-4 pe-4 pb-2">
             <div class="mt-4 d-flex align-items-center">
               <span class="p-1 rounded bg-success text-white me-2">4 <i class="fas fa-star"></i></span>
               <h5> Excellent</h5>
             </div>
-            <h6 class="mt-2">Lorem ipsum lorem ipsum</h6>
+            <h6 class="mt-2">{{r.comment}}</h6>
             <span class="me-2"><i class="fas fa-user"></i></span>
-            <span>Rajesh,</span>
-            <span>24 days ago</span>
+            <span>{{r.user}},</span>
+            <span>{{r.created}}</span>
           </div>
-          <div class="border ps-4 pe-4 pb-2">
-            <div class="mt-4 d-flex align-items-center">
-              <span class="p-1 rounded bg-success text-white me-2">4 <i class="fas fa-star"></i></span>
-              <h5> Excellent</h5>
-            </div>
-            <h6 class="mt-2">Lorem ipsum lorem ipsum</h6>
-            <span class="me-2"><i class="fas fa-user"></i></span>
-            <span>Rajesh,</span>
-            <span>24 days ago</span>
-          </div>
-          <div class="border ps-4 pe-4 pb-2">
-            <div class="mt-4 d-flex align-items-center">
-              <span class="p-1 rounded bg-success text-white me-2">4 <i class="fas fa-star"></i></span>
-              <h5> Excellent</h5>
-            </div>
-            <h6 class="mt-2">Lorem ipsum lorem ipsum</h6>
-            <span class="me-2"><i class="fas fa-user"></i></span>
-            <span>Rajesh,</span>
-            <span>24 days ago</span>
-          </div>
+          {% endfor %}
         </div>
       </div>
       <div class="col-md-6 ">

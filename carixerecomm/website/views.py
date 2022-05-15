@@ -341,7 +341,7 @@ def productdetail(request, id):
         ],
     )
     suggestions = ProductSerializer().serialize(
-        Product.objects.all(),
+        Product.objects.exclude(title=product.title),
         fields=[
             "id",
             "title",
@@ -357,6 +357,7 @@ def productdetail(request, id):
     suggestions = [p["fields"] for p in json.loads(suggestions)]
     for p in product:
         reviews = p["reviews"]
+        print(reviews)
         count = len(reviews)
         rates = [r["rate"] for r in reviews]
         p["rating"] = {"count": count, "rate": sum(rates) / max(1, count)}

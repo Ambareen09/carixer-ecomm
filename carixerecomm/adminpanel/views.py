@@ -14,7 +14,14 @@ from django.core.exceptions import ValidationError
 from .forms import UploadProduct
 
 from website.serializers import ProductSerializer
-from website.models import Product, OrderDetail, About, Waterless, DeliveryCheckpoint
+from website.models import (
+    Product,
+    OrderDetail,
+    About,
+    Waterless,
+    DeliveryCheckpoint,
+    OfferBanner,
+)
 
 
 def cartItems(request):
@@ -174,6 +181,28 @@ class Products(View):
     # def put(self, request):
 
 
+class Offers(View):
+    def post(self, request):
+        url = request.POST.get("offerurl")
+        image = request.POST.get("offerimage")
+
+        if OfferBanner.objects.filter(url=url).exists():
+            print(1654)
+            return HttpResponseRedirect("/panel/offerlist")
+        print(61846)
+        OfferBanner.objects.create(url=url, image=image)
+        return HttpResponseRedirect("/panel/offerlist")
+
+    def get(self, request):
+
+        banners = [model_to_dict(b) for b in OfferBanner.objects.all()]
+        return render(
+            request,
+            "adminpanel/offerlist.html",
+            {"offers": banners},
+        )
+
+
 class SingleProduct(View):
     def put(self, request, id_):
         if Product.objects.filter(id=id_).exists():
@@ -185,6 +214,23 @@ class SingleProduct(View):
         if Product.objects.filter(id=id_).exists():
             Product.objects.get(id=id_).delete()
         return HttpResponse({"msg": "successful"})
+
+
+class SingleOffer(View):
+    def put(self, request, id_):
+        if OfferBanner.objects.filter(id=id_).exists():
+            p = OfferBanner.objects.get(id=id_)
+            p.save()
+        return HttpResponse({"msg": "successful"})
+
+    def delete(self, request, id_):
+        if OfferBanner.objects.filter(id=id_).exists():
+            OfferBanner.objects.get(id=id_).delete()
+        return HttpResponse({"msg": "successful"})
+
+
+def addoffer(request):
+    return render(request, "adminpanel/addoffer.html")
 
 
 def addproduct(request):

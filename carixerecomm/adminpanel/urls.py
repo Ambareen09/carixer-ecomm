@@ -6,9 +6,12 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("addproduct", views.addproduct, name="addproduct"),
     path("productlist", views.Products.as_view(), name="productlist"),
+    path("addoffer", views.addoffer, name="addoffer"),
+    path("offerlist", views.Offers.as_view(), name="offerlist"),
     path(
         "singleproduct/<int:id_>", views.SingleProduct.as_view(), name="singleproduct"
     ),
+    path("singleoffer/<int:id_>", views.SingleOffer.as_view(), name="singleoffer"),
     path("myshipments", views.myshipments, name="myshipments"),
     path("orders", views.orders, name="orders"),
     path("singleorder/<int:id_>", views.SingleOrder.as_view(), name="singleorder"),

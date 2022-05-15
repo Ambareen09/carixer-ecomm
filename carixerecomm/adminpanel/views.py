@@ -202,11 +202,38 @@ class Offers(View):
 
 
 class SingleProduct(View):
+    def get(self, request, id_):
+        if Product.objects.filter(id=id_).exists():
+            p = Product.objects.get(id=id_)
+
+            return render(
+                request, "adminpanel/addproduct.html", {"product": model_to_dict(p)}
+            )
+        return render(request, "adminpanel/addproduct.html")
+
     def put(self, request, id_):
         if Product.objects.filter(id=id_).exists():
             p = Product.objects.get(id=id_)
+
+            title = request.POST.get("productname")
+            product_desc = request.POST.get("description")
+            image = request.FILES["productimage"]
+            size = request.POST.get("size")
+            price = request.POST.get("price")
+            stock = request.POST.get("stock")
+            status = request.POST.get("status", "PUBLISHED")
+
+            p.title = title
+            p.long_description = product_desc
+            p.image = image
+            p.price = price
+            p.size = size
+            p.stock = stock
+            p.status = status
+
             p.save()
-        return HttpResponse({"msg": "successful"})
+
+        return HttpResponseRedirect("/panel/productlist")
 
     def delete(self, request, id_):
         if Product.objects.filter(id=id_).exists():

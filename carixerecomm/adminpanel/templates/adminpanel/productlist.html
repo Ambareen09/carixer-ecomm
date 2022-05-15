@@ -81,9 +81,11 @@
                     <div class="dropdown">
                       <button type="button" class="btn btn-success" data-bs-toggle="modal"
                         data-bs-target="#viewproduct{{p.id}}"><i class="fas fa-eye"></i></button>
-                      <button type="button" class="btn btn-primary"><i class="fas fa-pen"></i></button>
-                      <button type="button" class="btn btn-outline-danger"><i class="fas fa-trash"
-                          onclick="deleteProduct({{p.id}})"></i></button>
+                      <a href="/panel/singleproduct/{{p.id}}">
+                        <button type="button" class="btn btn-primary"><i class="fas fa-pen"></i></button>
+                      </a>
+                      <button type="button" class="btn btn-outline-danger" onclick="deleteProduct({{p.id}})"><i
+                          class="fas fa-trash"></i></button>
                     </div>
                   </td>
                 </tr>

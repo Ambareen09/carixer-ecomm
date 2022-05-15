@@ -41,55 +41,69 @@
         <!-- / Navbar -->
 
         <!-- Content wrapper -->
-        <form role="form" method="POST" action="/panel/productlist" enctype="multipart/form-data">
-          <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-          <div class="card m-5">
-            <div class="card-header d-flex justify-content-between align-items-center">
+        {% if product %}
+        <form role="form" method="PUT" action="/panel/singleproduct/{{product.id}}" enctype="multipart/form-data">
+          {% else %}
+          <form role="form" method="POST" action="/panel/productlist" enctype="multipart/form-data">
+            {% endif %}
+            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+            <div class="card m-5">
+              <div class="card-header d-flex justify-content-between align-items-center">
 
-              <h5>Add New Product</h5>
-              <div>
-                <input class="btn btn-outline-secondary me-3" type="submit" name="status" value="Save to Draft" />
-                <input class="btn btn-success" type="submit" value="Save and Publish" />
-              </div>
-            </div>
-            <div class="p-4">
-              <h6>Basic Information</h6>
-              <hr>
-              <div class="mb-3">
-                <label for="productname" class="form-label">Product Name*</label>
-                <input type="text" class="form-control" id="productname" name="productname"
-                  placeholder="Enter Product Name" />
-              </div>
-              <div class="mb-3">
-                <label for="description" class="form-label">Product Description*</label>
-                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
-              </div>
-              <div class="mb-3">
-                <label for="productimage" class="form-label">Product Image*</label>
-                <input class="form-control" id="productimage" name="productimage" type="file">
-              </div>
-            </div>
-            <div class="p-4">
-              <h6>Sales Information</h6>
-              <hr>
-              <div class="row mb-3">
-                <div class="col">
-                  <label for="size" class="form-label">Size</label>
-                  <input type="text" class="form-control" id="size" name="size" value="200ml"
-                    placeholder="Enter Size" />
-                </div>
-                <div class="col">
-                  <label for="price" class="form-label">Price</label>
-                  <input type="text" class="form-control" id="price" name="price" placeholder="Enter Price" />
-                </div>
-                <div class="col">
-                  <label for="stock" class="form-label">Stock</label>
-                  <input type="text" class="form-control" id="stock" name="stock" placeholder="Enter Stock" />
+                <h5>Add New Product</h5>
+                <div>
+                  {% if not product %}
+                  <input class="btn btn-outline-secondary me-3" type="submit" name="status" value="Save to Draft" />
+                  {% endif %}
+                  <input class="btn btn-success" type="submit" value="Save and Publish" />
                 </div>
               </div>
+              <div class="p-4">
+                <h6>Basic Information</h6>
+                <hr>
+                <div class="mb-3">
+                  <label for="productname" class="form-label">Product Name*</label>
+                  {% if product %}
+                  <input type="text" class="form-control" id="productname" name="productname"
+                    value="{{product.title}}" />
+                  {% else %}
+                  <input type="text" class="form-control" id="productname" name="productname"
+                    placeholder="Enter Product Name" />
+                  {% endif %}
+                </div>
+                <div class="mb-3">
+                  <label for="description" class="form-label">Product Description*</label>
+                  <textarea class="form-control" id="description" name="description"
+                    rows="4">{% if product %}{{product.long_description}}{% endif %}</textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="productimage" class="form-label">Product Image*</label>
+                  <input class="form-control" id="productimage" name="productimage" type="file">
+                </div>
+              </div>
+              <div class="p-4">
+                <h6>Sales Information</h6>
+                <hr>
+                <div class="row mb-3">
+                  <div class="col">
+                    <label for="size" class="form-label">Size</label>
+                    <input type="text" class="form-control" id="size" name="size" {% if product %}
+                      value="{{product.size}}" {% else %} value="200ml" placeholder="Enter Size" {% endif %} />
+                  </div>
+                  <div class="col">
+                    <label for="price" class="form-label">Price</label>
+                    <input type="text" class="form-control" id="price" name="price" {% if product %}
+                      value="{{product.price}}" {% else %} placeholder="Enter Price" {% endif %} />
+                  </div>
+                  <div class="col">
+                    <label for="stock" class="form-label">Stock</label>
+                    <input type="text" class="form-control" id="stock" name="stock" {% if product %}
+                      value="{{product.stock}}" {% else %} placeholder="Enter Stock" {% endif %} />
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-          <!-- Content wrapper -->
+            <!-- Content wrapper -->
       </div>
       </form>
       <!-- / Layout page -->

@@ -410,3 +410,15 @@ class cartView(View):
             )
             odo.save()
         return HttpResponse({"msg": "successful"})
+
+
+class ReviewView(View):
+    def post(self):
+        data = request.POST
+        Review.objects.create(
+            user=request.user,
+            rate=data["rate"],
+            comment=data["comment"],
+            product=Product.objects.get(id=data["product_id"]),
+        )
+        return HttpResponse({"msg": "successful"})

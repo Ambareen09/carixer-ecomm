@@ -96,6 +96,11 @@
                       value="{{product.price}}" {% else %} placeholder="Enter Price" {% endif %} />
                   </div>
                   <div class="col">
+                    <label for="discount" class="form-label">Discount</label>
+                    <input type="text" class="form-control" id="discount" name="discount" {% if product %}
+                      value="{{product.discount}}" {% else %} placeholder="Enter Discount" {% endif %} />
+                  </div>
+                  <div class="col">
                     <label for="stock" class="form-label">Stock</label>
                     <input type="text" class="form-control" id="stock" name="stock" {% if product %}
                       value="{{product.stock}}" {% else %} placeholder="Enter Stock" {% endif %} />

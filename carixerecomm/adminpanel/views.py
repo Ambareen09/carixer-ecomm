@@ -115,16 +115,14 @@ class Products(View):
     def post(self, request):
         title = request.POST.get("productname")
         product_desc = request.POST.get("description")
-        image = request.POST.get("productimage")
+        image = request.FILES["productimage"]
         size = request.POST.get("size")
         price = request.POST.get("price")
         stock = request.POST.get("stock")
         status = request.POST.get("status", "PUBLISHED")
 
         if Product.objects.filter(title=title, size=size).exists():
-            print(1654)
             return HttpResponseRedirect("/panel/productlist")
-        print(61846)
         Product.objects.create(
             title=title,
             long_description=product_desc,

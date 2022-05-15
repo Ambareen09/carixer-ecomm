@@ -119,7 +119,7 @@ def index(request):
     about = list(About.objects.values())
     cart = cartItems(request)
     products = ProductSerializer().serialize(
-        Product.objects.filter(featured=True),
+        Product.objects.all(),
         fields=[
             "id",
             "title",
@@ -420,15 +420,3 @@ class cartView(View):
             )
             odo.save()
         return HttpResponse({"msg": "successful"})
-
-
-# class ReviewView(View):
-#     def post(self, request):
-#         data = request.POST
-#         Review.objects.create(
-#             user=request.user,
-#             rate=data["rate"],
-#             comment=data["comment"],
-#             product=Product.objects.get(id=data["product_id"]),
-#         )
-#         return HttpResponse({"msg": "successful"})

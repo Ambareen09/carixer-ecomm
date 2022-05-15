@@ -64,12 +64,11 @@
 
     .rate:not(:checked)>input {
       position: absolute;
-      top: -9999px;
+      clip: rect(0, 0, 0, 0);
     }
 
     .rate:not(:checked)>label {
       float: right;
-      width: 1em;
       overflow: hidden;
       white-space: nowrap;
       cursor: pointer;

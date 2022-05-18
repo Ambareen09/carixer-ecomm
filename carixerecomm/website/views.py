@@ -52,6 +52,15 @@ def register(request):
     return redirect("/")
 
 
+def get_client_ip(request):
+    x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(",")[0]
+    else:
+        ip = request.META.get("REMOTE_ADDR")
+    return ip
+
+
 class UserLogin(View):
     def post(self, request):
         data = request.POST
@@ -64,7 +73,8 @@ class UserLogin(View):
             if user.is_active:
                 login(request, user)
                 profile = Profile.objects.get(user=user)
-                # profile.location = g.country(request.META["REMOTE_ADDR"])
+
+                # profile.location = g.country(get_client_ip(request))
                 profile.save()
                 messages.success(request, "login succesful")
             else:

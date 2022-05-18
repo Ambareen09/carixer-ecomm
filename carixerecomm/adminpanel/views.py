@@ -21,6 +21,7 @@ from website.models import (
     Waterless,
     DeliveryCheckpoint,
     OfferBanner,
+    Profile,
 )
 
 
@@ -303,4 +304,8 @@ class SingleOrder(View):
 
 def users(request):
     users = list(User.objects.all().values())
+    print(users)
+    for u in users:
+        profile = Profile.objects.get(user__id=u["id"])
+        u["country"] = profile.location
     return render(request, "adminpanel/users.html", {"users": users})

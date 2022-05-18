@@ -52,7 +52,7 @@
                   <th>User ID</th>
                   <th>Username</th>
                   <th>Email ID</th>
-                  <th>Password</th>
+                  <th>Country (last login)</th>
                   <th>DOJ</th>
                   <th>Status</th>
                   <th>Actions</th>
@@ -65,7 +65,7 @@
                   <td><strong>{{u.username}}</strong></td>
                   <!-- <td><strong>{{u.first_name}} {{u.last_name}}</strong></td> -->
                   <td>{{u.email}}</td>
-                  <td>*********</td>
+                  <td>{{u.country}}</td>
                   <td>{{u.date_joined.strftime('%d %B %Y')}}</td>
                   <td><span class='badge {{"bg-label-success" if u.is_active else "bg-label-danger"}} me-1'>{{Active if
                       u.is_active else Inactive}}</span></td>

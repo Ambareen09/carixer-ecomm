@@ -27,7 +27,7 @@
                     {% if request.user.is_authenticated %}
                     <li class="nav-item me-4">
                         <a {% if request.path=='/orders' %} class="nav-link active" {% else %} class="nav-link" {% endif
-                            %} aria-current="page" href="/orders">MY ORDERS</a>
+                            %} aria-current="page" href="/orders">ORDERS</a>
                     </li>
                     {% endif %}
                     <li class="nav-item me-4">
@@ -142,17 +142,29 @@
     </style>
     {% if messages %}
     {% for m in messages %}
-    <div id="signup-response" class="alert alert-{{ m.tags }} m-1" style="width: 100%;
+    <div id="signup-response" class="alert alert-{{ m.tags }} m-1" style="right:-25%; width: 50%;
     text-align: center;">
+        {% if m.tag=='error' %}
         <div style="width: 100%;
         text-align: center;
-        border: solid 5px red;
+        border: solid 3px red;
         border-radius: 133px;
         color: red;
         background-color: antiquewhite;
         /* position: absolute;">
             {{ m }}
         </div>
+        {% else %}
+        <div style="width: 100%;
+        text-align: center;
+        border: solid 3px blue;
+        border-radius: 133px;
+        color: blue;
+        background-color: rgb(215, 220, 250);
+        /* position: absolute;">
+            {{ m }}
+        </div>
+        {% endif %}
     </div>
     {% endfor %}
     {% endif %}

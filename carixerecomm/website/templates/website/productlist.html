@@ -46,7 +46,7 @@
       <div class="mt-5 d-flex align-items-center flex-wrap" id="listproducts">
         {% for p in products%}
         <a style="text-decoration:none; color:#000;" href="productdetail/{{p.id}}"
-          class="card border-light text-center me-3 list_card" id={{p.id}}>
+          class="card border-light text-center me-md-3 list_card" id={{p.id}}>
           <img src="/{{p.image[8:]}}" class="card-img-top img">
           <div class="card-body">
             <h6 class="card-title blue fw-bold">{{p.title}}</h6>
@@ -118,6 +118,11 @@
   {% include 'cart.html' %}
 
   <!-- cart Modal -->
+  <!-- wishlist Modal -->
+
+  {% include 'wishlist.html' %}
+
+  <!-- wishlist Modal -->
 
 
 
@@ -156,7 +161,7 @@
           document.body.style.paddingTop = '0';
         }
       });
-    }); 
+    });
   </script>
 
   <script>

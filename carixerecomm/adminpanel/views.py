@@ -21,7 +21,7 @@ from website.models import (
     Waterless,
     DeliveryCheckpoint,
     OfferBanner,
-    Profile,
+    Profile
 )
 
 
@@ -39,15 +39,14 @@ def cartItems(request):
         o["percentSave"] = 50
         temp = o["status"]
         o["status_color"] = ""
-        match temp:
-            case "DELIVERED":
-                o["status_color"] = "delivery"
-            case "ORDERED":
-                o["status_color"] = "order"
-            case "CANCELLED":
-                o["status_color"] = "cancel"
-            case default:
-                o["status_color"] = "cancel"
+        if temp == "DELIVERED":
+            o["status_color"] = "delivery"
+        elif temp == "ORDERED":
+            o["status_color"] = "order"
+        elif temp == "CANCELLED":
+            o["status_color"] = "cancel"
+        else:
+            o["status_color"] = "cancel"
     return cart
 
 

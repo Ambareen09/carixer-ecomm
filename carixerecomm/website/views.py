@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.gis.geoip2 import GeoIP2
 
+
 from .serializers import ProductSerializer
 from .models import (
     Product,
@@ -57,7 +58,7 @@ def get_client_ip(request):
     if x_forwarded_for:
         ip = x_forwarded_for.split(",")[0]
     else:
-        ip = request.META.get("REMOTE_ADDR")
+        ip = request.META.get("127.0.0.1:8000")
     return ip
 
 
@@ -72,10 +73,12 @@ class UserLogin(View):
         if user:
             if user.is_active:
                 login(request, user)
-                profile = Profile.objects.get(user=user)
-
-                # profile.location = g.country(get_client_ip(request))
-                profile.save()
+                if Profile.objects.filter(user=user):
+                    profile = Profile.objects.get(user=user)
+                    ip = get_client_ip(request)
+                    if ip:
+                        profile.location = g.country(ip)
+                        profile.save()
                 messages.success(request, "login succesful")
             else:
                 messages.error(request, "inactive account")
@@ -119,6 +122,42 @@ def cartItems(request, ids=None):
     return cart
 
 
+def wishlistItems(request, ids=None):
+    if ids:
+        cart = list(
+            OrderDetail.objects.filter(
+                id__in=ids, user__id=request.user.id, status="WISHLIST"
+            ).values()
+        )
+    else:
+        cart = list(
+            OrderDetail.objects.filter(
+                user__id=request.user.id, status="WISHLIST"
+            ).values()
+        )
+    for o in cart:
+        print(o)
+        p = Product.objects.get(id=o["product_id"])
+        o["title"] = p.title
+        o["image"] = str(p.image)
+        o["price"] = p.price
+        o["totalPrice"] = o["quantity"] * p.price * (100 - p.discount) / 100
+        o["save"] = o["totalPrice"] + 0.5 * o["totalPrice"]
+        o["percentSave"] = 50
+        o["discount"] = p.discount
+        temp = o["status"]
+        o["status_color"] = ""
+        if temp == "DELIVERED":
+            o["status_color"] = "delivery"
+        elif temp == "ORDERED":
+            o["status_color"] = "order"
+        elif temp == "CANCELLED":
+            o["status_color"] = "cancel"
+        else:
+            o["status_color"] = "cancel"
+    return cart
+
+
 def cart(cartItems):
     cartList = {"grandTotal": 0}
     for c in cartItems:
@@ -129,6 +168,7 @@ def cart(cartItems):
 def index(request):
     about = list(About.objects.values())
     cart = cartItems(request)
+    wishlist = wishlistItems(request)
     products = ProductSerializer().serialize(
         Product.objects.all(),
         fields=[
@@ -153,13 +193,21 @@ def index(request):
     return render(
         request,
         "index.html",
-        {"products": products, "about": about, "cart": cart, "banners": banners},
+        {
+            "products": products,
+            "about": about,
+            "cart": cart,
+            "banners": banners,
+            "wishlist": wishlist,
+        },
     )
 
 
 def about(request):
     about = list(About.objects.values())
     cart = cartItems(request)
+    wishlist = wishlistItems(request)
+
     return render(request, "about.html", {"about": about, "cart": cart})
 
 
@@ -190,13 +238,22 @@ def productlist(request):
     )
     products = [p["fields"] for p in json.loads(products)]
     cart = cartItems(request)
+    wishlist = wishlistItems(request)
     for p in products:
         reviews = p["reviews"]
         count = len(reviews)
         rates = [r["rate"] for r in reviews]
         p["rating"] = {"count": count, "rate": sum(rates) / max(1, count)}
 
-    return render(request, "productlist.html", {"products": products, "cart": cart})
+    return render(
+        request,
+        "productlist.html",
+        {
+            "products": products,
+            "cart": cart,
+            "wishlist": wishlist,
+        },
+    )
 
 
 def offers(request):
@@ -227,25 +284,43 @@ def offers(request):
     )
     products = [p["fields"] for p in json.loads(products)]
     cart = cartItems(request)
+    wishlist = wishlistItems(request)
     for p in products:
         reviews = p["reviews"]
         count = len(reviews)
         rates = [r["rate"] for r in reviews]
         p["rating"] = {"count": count, "rate": sum(rates) / max(1, count)}
 
-    return render(request, "offerlist.html", {"products": products, "cart": cart})
+    return render(
+        request,
+        "offerlist.html",
+        {
+            "products": products,
+            "cart": cart,
+            "wishlist": wishlist,
+        },
+    )
 
 
 def waterless(request):
     waterless = list(Waterless.objects.values())
     cart = cartItems(request)
-    print(waterless)
-    return render(request, "waterless.html", {"waterless": waterless, "cart": cart})
+    wishlist = wishlistItems(request)
+    return render(
+        request,
+        "waterless.html",
+        {
+            "waterless": waterless,
+            "cart": cart,
+            "wishlist": wishlist,
+        },
+    )
 
 
 def orders(request):
     orders = list(OrderDetail.objects.exclude(status="INCART").values())
     cart = cartItems(request)
+    wishlist = wishlistItems(request)
     for o in orders:
         product = list(Product.objects.filter(id=o["product_id"]).values())
         for p in product:
@@ -264,12 +339,21 @@ def orders(request):
             o["status_color"] = "cancel"
         else:
             o["status_color"] = "order"
-    return render(request, "orders.html", {"orders": orders, "cart": cart})
+    return render(
+        request,
+        "orders.html",
+        {
+            "orders": orders,
+            "cart": cart,
+            "wishlist": wishlist,
+        },
+    )
 
 
 def ordersdetail(request, id):
     orders = list(OrderDetail.objects.filter(id=id).values())
     cart = cartItems(request)
+    wishlist = wishlistItems(request)
     for o in orders:
         product = list(Product.objects.filter(id=o["product_id"]).values())
         for p in product:
@@ -294,7 +378,15 @@ def ordersdetail(request, id):
                 "transit_index"
             )
         ]
-    return render(request, "orderdetail.html", {"orders": orders, "cart": cart})
+    return render(
+        request,
+        "orderdetail.html",
+        {
+            "orders": orders,
+            "cart": cart,
+            "wishlist": wishlist,
+        },
+    )
 
 
 def checkout(request):
@@ -332,7 +424,15 @@ def checkout(request):
             ids = list(map(int, json.loads(items)))
         cartItem = cartItems(request, ids)
         carts = cart(cartItem)
-        return render(request, "checkout.html", {"cartItems": cartItem, "cart": carts})
+        return render(
+            request,
+            "checkout.html",
+            {
+                "cartItems": cartItem,
+                "cart": carts,
+                "wishlist": wishlist,
+            },
+        )
 
 
 def productdetail(request, id):
@@ -346,6 +446,7 @@ def productdetail(request, id):
         )
 
     cart = cartItems(request)
+    wishlist = wishlistItems(request)
     product = Product.objects.get(id=id)
     product = ProductSerializer().serialize(
         Product.objects.filter(title=product.title),
@@ -379,7 +480,6 @@ def productdetail(request, id):
     suggestions = [p["fields"] for p in json.loads(suggestions)]
     for p in product:
         reviews = p["reviews"]
-        print(reviews)
         count = len(reviews)
         rates = [r["rate"] for r in reviews]
         p["rating"] = {"count": count, "rate": sum(rates) / max(1, count)}
@@ -402,7 +502,13 @@ def productdetail(request, id):
     return render(
         request,
         "productdetail.html",
-        {"p": product[0], "sizes": sizes, "suggestions": suggestions, "cart": cart},
+        {
+            "p": product[0],
+            "sizes": sizes,
+            "suggestions": suggestions,
+            "cart": cart,
+            "wishlist": wishlist,
+        },
     )
 
 
@@ -433,6 +539,43 @@ class cartView(View):
             odo = OrderDetail(
                 user=request.user,
                 status="INCART",
+                date=date.today(),
+                product=Product.objects.get(id=id_),
+                quantity=data["quantity"],
+            )
+            odo.save()
+        return HttpResponse({"msg": "successful"})
+
+
+class wishlistView(View):
+    def put(self, request, id_):
+        data = json.loads(request.body.decode("utf-8"))
+        odo = OrderDetail.objects.get(
+            id=id_, user__id=request.user.id, status="WISHLIST"
+        )
+        if data["quantity"] > 0:
+            odo.quantity = data["quantity"]
+            odo.save()
+        else:
+            odo.delete()
+        return HttpResponse({"msg": "successful"})
+
+    def post(self, request, id_):
+        data = json.loads(request.body.decode("utf-8"))
+        from datetime import date
+
+        if OrderDetail.objects.filter(
+            product__id=id_, user__id=request.user.id, status="WISHLIST"
+        ).exists():
+            odo = OrderDetail.objects.get(
+                product__id=id_, user__id=request.user.id, status="WISHLIST"
+            )
+            odo.quantity += data["quantity"]
+            odo.save()
+        else:
+            odo = OrderDetail(
+                user=request.user,
+                status="WISHLIST",
                 date=date.today(),
                 product=Product.objects.get(id=id_),
                 quantity=data["quantity"],

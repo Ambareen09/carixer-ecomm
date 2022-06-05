@@ -1,0 +1,123 @@
+<div class="modal" id="wishlistModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog cart-dialog">
+        <div class="modal-content cart-content">
+            <div class="modal-header">
+                <h5 class="modal-title blue" id="exampleModalLabel">WISHLISTS</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <hr>
+                <div>
+                    <div class="card mb-3 border-light" style="max-width: 540px;">
+                        {% for c in wishlist %}
+                        <input type="checkbox" id="wl{{c.id}}" name="wishlist-cb" value="{{c.id}}" checked="1">
+                        <div class="row g-0" id="wishlistItem{{c.id}}">
+                            <div class="col-md-4">
+                                <img src="/{{c.image[8:]}}" class="img-fluid rounded-start" alt="...">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body cart-card-body">
+                                    <h6 class="card-title blue">{{c.title}}</h6>
+                                    <p id="totalPrice{{c.id}}" class="card-text fw-bold">${{c.totalPrice}}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex btn-outline-blue rounded" style="width: 50%;">
+                                            <button id="decrease" type="button"
+                                                class="quantity-left-minus btn btn-number" data-type="minus"
+                                                data-field="" onclick="cartMinusWL({{c.id}}, {{c.price}})">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                            <input type="text" id="number{{c.id}}" name="quantity"
+                                                class="form-control text-center input-number fw-bold blue"
+                                                value={{c.quantity}} min="1" max="100"
+                                                onchange="cartInputWL({{c.id}}, {{c.price}})" />
+                                            <button id="increase" type="button"
+                                                class="quantity-right-plus btn btn-number" data-type="plus"
+                                                data-field="" onclick="cartPlusWL({{c.id}}, {{c.price}})">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                        <div>
+                                            <a id="remove" class="blue ms-5 fw-normal" href="#"
+                                                onclick="removeWL({{c.id}})">REMOVE</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function cartPlusWL(itemId, price) {
+        const num = document.getElementById(`number${itemId}`)
+        var value = parseInt(num.value, 10);
+        value = isNaN(value) ? 0 : value;
+        value < 1 ? value = 1 : '';
+        value++;
+        $.ajax({
+            url: `/wishlist/${itemId}`,
+            type: 'PUT',
+            headers: { 'X-CSRFToken': csrftoken },
+            data: `{ "quantity" : ${value} }`,
+            success: function () {
+                num.value = value;
+                document.getElementById(`totalPrice${itemId}`).innerHTML = '$' + price * value;
+            }
+        })
+    };
+    function cartMinusWL(itemId, price) {
+        const num = document.getElementById(`number${itemId}`)
+        var value = parseInt(num.value, 10);
+        value = isNaN(value) ? 0 : value;
+        value < 1 ? value = 1 : '';
+        value--;
+        $.ajax({
+            url: `/wishlist/${itemId}`,
+            type: 'PUT',
+            headers: { 'X-CSRFToken': csrftoken },
+            data: `{ "quantity" : ${value} }`,
+            success: function () {
+                num.value = value;
+                document.getElementById(`totalPrice${itemId}`).innerHTML = '$' + price * value;
+                console.log(price, value, price * value);
+            }
+        })
+    }
+    function cartInputWL(itemId, price) {
+        const num = document.getElementById(`number${itemId}`)
+        var value = parseInt(num.value, 10);
+        value = isNaN(value) ? 0 : value;
+        value < 1 ? value = 1 : '';
+        $.ajax({
+            url: `/wishlist/${itemId}`,
+            type: 'PUT',
+            headers: { 'X-CSRFToken': csrftoken },
+            data: `{ "quantity" : ${value} }`,
+            success: function () {
+                num.value = value;
+                document.getElementById(`totalPrice${itemId}`).innerHTML = '$' + price * value;
+            }
+        })
+    }
+
+
+    function removeWL(itemId) {
+        const num = document.getElementById(`wishlistItem${itemId}`)
+        var value = parseInt(num.value, 10);
+        value = isNaN(value) ? 0 : 0;
+        $.ajax({
+            url: `/wishlist/${itemId}`,
+            type: 'PUT',
+            headers: { 'X-CSRFToken': csrftoken },
+            data: `{ "quantity": ${value} }`,
+            success: function () {
+                num.remove();
+            }
+        })
+    }
+</script>

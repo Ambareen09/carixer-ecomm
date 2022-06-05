@@ -15,6 +15,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script src="/static/productlike.json"></script>
+  <script src="/static/products.js"></script>
 </head>
 
 <body>
@@ -99,12 +100,21 @@
   </style>
   {% include 'base.html' %}
   <div class="product_list container-xxl">
-    <div class="d-flex justify-content-between align-items-center">
-      <div class="w-50">
-        <img src="/{{p.image[8:]}}" width="90%" alt="" />
+    <div class="row">
+      <div class="col-md-6 d-flex">
+        <div id="img_src" style="width: 20%; margin-right: 10px;">
+          <img src="/{{p.image[8:]}}" class="mb-3 product_src imgactive" data-type="image" width="100%" alt="" />
+          <img src="/{{p.image[8:]}}" class="mb-3 product_src" data-type="image" width="100%" alt="" />
+          <img src="/{{p.image[8:]}}" class="mb-3 product_src" data-type="image" width="100%" alt="" />
+          <video src="/{{p.image[8:]}}" width="100%" class="product_src"></video>
+        </div>
+        <div>
+          <img id="large_img" src="/{{p.image[8:]}}" width="100%" alt="" />
+          <video id="large_video" width="90%" src="" controls style="display: none;"></video>
+        </div>
       </div>
-      <div class="w-50">
-        <h3 class="blue fw-bold mb-3">{{p.title}}</h3>
+      <div class="col-md-6 mt-2">
+        <h3 class="blue fw-bold mb-3 mt-3">{{p.title}}</h3>
         <p>
           {% for i in range(p.rating.rate|int)%}
           <span class="fa fa-star checked"></span>
@@ -132,8 +142,17 @@
             <h3 id='price' class="fw-bold">$ {{p.price}}</h3>
           </div>
         </div>
-        <div class="d-flex justify-content-between align-items-center mt-5 w-75">
-          <div class="d-flex w-25 btn-outline-blue rounded">
+        <div class="d-flex justify-content-between align-items-center mt-5 flex-wrap" style="max-width: 500px;">
+          <div class="mb-3">
+            {% if user.is_authenticated %}
+            <span id=heart>
+              {% else %}
+              <button class="btn" data-bs-toggle="modal" data-bs-target="#loginModal" type="button">
+                {% endif %}
+                <i class="nf fas fa-heart" type="button" onclick="addToWishlist()"></i>
+            </span>
+          </div>
+          <div class="d-flex btn-outline-blue rounded mb-3" style="width: 135px">
             <button type="button" class="quantity-left-minus btn btn-number" data-type="minus" data-field=""
               onclick="minus()">
               <i class="fas fa-minus"></i>
@@ -145,7 +164,7 @@
               <i class="fas fa-plus"></i>
             </button>
           </div>
-          <div>
+          <div class="mb-3">
             {% if user.is_authenticated %}
             <button type="button" class="btn btn-outline-blue" onclick="addToCart()">
               {% else %}
@@ -154,7 +173,7 @@
                 ADD TO CART
               </button>
           </div>
-          <div>
+          <div class="mb-3">
             {% if user.is_authenticated %}
             <button id="add-to-cart" type="button" class="btn btn-blue" onclick="buyNow({{p.id}})">
               {% else %}
@@ -229,198 +248,231 @@
         </form>
       </div>
     </div>
-    {% endif %}
-    <div class="mt-5">
-      <div class="d-flex justify-content-center align-items-center flex-column">
-        <h6 class="second_heading">YOU MAY ALSO LIKE</h6>
+  </div>
+  {% endif %}
+  <div class="mt-5">
+    <div class="d-flex justify-content-center align-items-center flex-column">
+      <h6 class="second_heading">YOU MAY ALSO LIKE</h6>
+    </div>
+  </div>
+  <div class="container-xxl">
+    <div>
+      <div class="mt-5 d-flex align-items-center flex-wrap" id="listproducts">
+        {% for p in suggestions %}
+        <a style="text-decoration:none; color:#000;" href="{{p.id}}"
+          class="card border-light text-center me-md-3 list_card" id={{p.id}}>
+          <img src="/{{p.image[8:]}}" class="card-img-top img">
+          <div class="card-body">
+            <h6 class="card-title blue fw-bold">{{p.title}}</h6>
+            <p class="card-text blue fw-bold">₹ {{p.price}}</p>
+            <p>
+              {% for i in range(p.rating.rate|int)%}
+              <span class="fa fa-star checked"></span>
+              {% endfor %}
+              {% for i in range(5-p.rating.rate|int)%}
+              <span class="fa fa-star"></span>
+              {% endfor %}
+              <span class="fw-normal"> {{p.rating.count}} reviews</span>
+            </p>
+          </div>
+        </a>
+        {% endfor %}
       </div>
     </div>
-    <div class="container-xxl">
-      <div>
-        <div class="mt-5 d-flex align-items-center flex-wrap" id="listproducts">
-          {% for p in suggestions %}
-          <a style="text-decoration:none; color:#000;" href="{{p.id}}"
-            class="card border-light text-center me-3 list_card" id={{p.id}}>
-            <img src="/{{p.image[8:]}}" class="card-img-top img">
-            <div class="card-body">
-              <h6 class="card-title blue fw-bold">{{p.title}}</h6>
-              <p class="card-text blue fw-bold">₹ {{p.price}}</p>
-              <p>
-                {% for i in range(p.rating.rate|int)%}
-                <span class="fa fa-star checked"></span>
-                {% endfor %}
-                {% for i in range(5-p.rating.rate|int)%}
-                <span class="fa fa-star"></span>
-                {% endfor %}
-                <span class="fw-normal"> {{p.rating.count}} reviews</span>
-              </p>
-            </div>
-          </a>
-          {% endfor %}
+  </div>
+  <div style="background-color: #0b3e64">
+    <div class="container-xxl text-white" style="padding-top: 100px; padding-bottom: 100px">
+      <div class="row">
+        <div class="col-md-4 mb-4">
+          <h6>CARIXER WATERLESS CAR CARE SOLUTION</h6>
+          <div><span>Copyright &#169; Carixer</span></div>
+          <div class="mt-2">
+            <span>&#169; 2021. All right reserved.</span>
+          </div>
+          <div class="mt-2"><span>0422-765432</span></div>
         </div>
-      </div>
-    </div>
-    <div style="background-color: #0b3e64">
-      <div class="container-xxl text-white" style="padding-top: 100px; padding-bottom: 100px">
-        <div class="row">
-          <div class="col-md-4 mb-4">
-            <h6>CARIXER WATERLESS CAR CARE SOLUTION</h6>
-            <div><span>Copyright &#169; Carixer</span></div>
-            <div class="mt-2">
-              <span>&#169; 2021. All right reserved.</span>
+        <div class="col-md-8">
+          <div class="row">
+            <div class="col mb-4">
+              <h6>ABOUT</h6>
+              <div class="mb-2"><span>SHIPPING & RETURNS</span></div>
+              <div class="mb-2"><span>BLOG</span></div>
+              <div><span>CONTACT US</span></div>
             </div>
-            <div class="mt-2"><span>0422-765432</span></div>
-          </div>
-          <div class="col-md-8">
-            <div class="row">
-              <div class="col mb-4">
-                <h6>ABOUT</h6>
-                <div class="mb-2"><span>SHIPPING & RETURNS</span></div>
-                <div class="mb-2"><span>BLOG</span></div>
-                <div><span>CONTACT US</span></div>
-              </div>
-              <div class="col mb-4">
-                <h6>POLICIES</h6>
-                <div class="mb-2"><span>PRIVACY POLICY</span></div>
-                <div><span>TERMS & CONDITIONS</span></div>
-              </div>
-              <div class="col mb-4">
-                <h6>HEY</h6>
-                <div>
-                  <span>Enter your email to stay in the loop on new collections,
-                    pop-up shows and more.t</span>
-                </div>
-              </div>
+            <div class="col mb-4">
+              <h6>POLICIES</h6>
+              <div class="mb-2"><span>PRIVACY POLICY</span></div>
+              <div><span>TERMS & CONDITIONS</span></div>
             </div>
-          </div>
-        </div>
-        <hr />
-        <div class="row">
-          <div class="col">
-            &copy; 2022 - Copyright Carixer. All rights reserved.
-          </div>
-          <div class="col">
-            <div class="row">
-              <div class="col">Terms & Conditions</div>
-              <div class="col">Policy</div>
-              <div class="col">Privacy</div>
+            <div class="col mb-4">
+              <h6>HEY</h6>
+              <div>
+                <span>Enter your email to stay in the loop on new collections,
+                  pop-up shows and more.t</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      <hr />
+      <div class="row">
+        <div class="col">
+          &copy; 2022 - Copyright Carixer. All rights reserved.
+        </div>
+        <div class="col">
+          <div class="row">
+            <div class="col">Terms & Conditions</div>
+            <div class="col">Policy</div>
+            <div class="col">Privacy</div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- User Login / Signup -->
-    {% include 'userAuth.html' %}
-    <!-- User Login / Signup -->
+  <!-- User Login / Signup -->
+  {% include 'userAuth.html' %}
+  <!-- User Login / Signup -->
 
-    <!-- cart Modal -->
-    {% include 'cart.html' %}
-    <!-- cart Modal -->
+  <!-- cart Modal -->
+  {% include 'cart.html' %}
+  <!-- cart Modal -->
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-      crossorigin="anonymous"></script>
+  <!-- wishlist Modal -->
+  {% include 'wishlist.html' %}
+  <!-- wishlist Modal -->
 
-    <!-- Swiper JS -->
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+
+  <!-- Swiper JS -->
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
 
 
-    <!-- Initialize Swiper -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        window.addEventListener("scroll", function () {
-          if (window.scrollY > 50) {
-            document.getElementById("navbar_top").classList.add("fixed-top");
-            document.getElementById("navbar_top").style.backgroundColor =
-              "#fff";
+  <!-- Initialize Swiper -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      window.addEventListener("scroll", function () {
+        if (window.scrollY > 50) {
+          document.getElementById("navbar_top").classList.add("fixed-top");
+          document.getElementById("navbar_top").style.backgroundColor =
+            "#fff";
 
-            // add padding top to show content behind navbar
-            navbar_height = document.querySelector(".navbar").offsetHeight;
-            document.body.style.paddingTop = navbar_height + "px";
-          } else {
-            document.getElementById("navbar_top").classList.remove("fixed-top");
-            document.getElementById("navbar_top").style.backgroundColor =
-              "transparent";
-            // remove padding top from body
-            document.body.style.paddingTop = "0";
-          }
-        });
-      });
-    </script>
-    <script>
-      function priceChange(p) {
-        var selectBox = document.getElementById("selectPrice");
-        if (p[selectBox.selectedIndex]['discount'] > 0) {
-          document.getElementById("origin-price").innerHTML = '$ ' + p[selectBox.selectedIndex]['price'];
+          // add padding top to show content behind navbar
+          navbar_height = document.querySelector(".navbar").offsetHeight;
+          document.body.style.paddingTop = navbar_height + "px";
+        } else {
+          document.getElementById("navbar_top").classList.remove("fixed-top");
+          document.getElementById("navbar_top").style.backgroundColor =
+            "transparent";
+          // remove padding top from body
+          document.body.style.paddingTop = "0";
         }
-        document.getElementById("price").innerHTML = '$ ' + String((100 - Number(p[selectBox.selectedIndex]['discount'])) * Number(p[selectBox.selectedIndex]['price']));
+      });
+    });
+  </script>
+  <script>
+    function priceChange(p) {
+      var selectBox = document.getElementById("selectPrice");
+      if (p[selectBox.selectedIndex]['discount'] > 0) {
+        document.getElementById("origin-price").innerHTML = '$ ' + p[selectBox.selectedIndex]['price'];
       }
-    </script>
-    <script>
-      function plus() {
-        const num = document.getElementById(`quantity`)
-        var value = parseInt(num.value, 10);
-        value = isNaN(value) ? 0 : value;
-        value < 1 ? value = 1 : '';
-        value++;
-        num.value = value;
-      };
+      document.getElementById("price").innerHTML = '$ ' + String((100 - Number(p[selectBox.selectedIndex]['discount'])) * Number(p[selectBox.selectedIndex]['price']));
+    }
+  </script>
+  <script>
+    function plus() {
+      const num = document.getElementById(`quantity`)
+      var value = parseInt(num.value, 10);
+      value = isNaN(value) ? 0 : value;
+      value < 1 ? value = 1 : '';
+      value++;
+      num.value = value;
+    };
 
 
-      function minus() {
-        const num = document.getElementById(`quantity`)
-        var value = parseInt(num.value, 10);
-        value = isNaN(value) ? 0 : value;
-        value < 1 ? value = 1 : '';
-        value--;
-        num.value = Math.max(1, value);
-      }
+    function minus() {
+      const num = document.getElementById(`quantity`)
+      var value = parseInt(num.value, 10);
+      value = isNaN(value) ? 0 : value;
+      value < 1 ? value = 1 : '';
+      value--;
+      num.value = Math.max(1, value);
+    }
 
-    </script>
-    <script>
-      function addToCart() {
-        var selectBox = document.getElementById("selectPrice");
-        var cart = document.getElementById('cart-button');
+  </script>
+  <script>
+    function addToCart() {
+      var selectBox = document.getElementById("selectPrice");
+      var cart = document.getElementById('cart-button');
 
+      setTimeout(function () {
+        cart.classList.add('shake');
         setTimeout(function () {
-          cart.classList.add('shake');
+          cart.classList.remove('shake');
+        }, 300)
+      }, 600)
+
+      const quantity = document.getElementById("quantity")
+      console.log("size" + String(selectBox.selectedIndex + 1))
+      var itemId = document.getElementById("size" + String(selectBox.selectedIndex + 1)).getAttribute("data-sizeid");
+      $.ajax({
+        url: `/cart/${itemId}`,
+        type: 'POST',
+        headers: { 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value },
+        data: `{ "quantity": ${quantity.value} }`,
+        success: function () {
           setTimeout(function () {
-            cart.classList.remove('shake');
-          }, 300)
-        }, 600)
+            window.location.reload();
+          }, 750)
+        }
+      })
+    }
 
-        const quantity = document.getElementById("quantity")
-        console.log("size" + String(selectBox.selectedIndex + 1))
-        var itemId = document.getElementById("size" + String(selectBox.selectedIndex + 1)).getAttribute("data-sizeid");
-        $.ajax({
-          url: `/cart/${itemId}`,
-          type: 'POST',
-          headers: { 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value },
-          data: `{ "quantity": ${quantity.value} }`,
-          success: function () {
-            setTimeout(function () {
-              window.location.reload();
-            }, 750)
-          }
-        })
-      }
 
-      function buyNow(itemId) {
-        const quantity = document.getElementById("quantity")
-        $.ajax({
-          url: `/cart/${itemId}`,
-          type: 'POST',
-          headers: { 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value },
-          data: `{ "quantity": ${quantity.value} }`,
-          success: function () {
-            window.location.href = '/checkout';
-          }
-        })
-      }
-    </script>
+    function addToWishlist() {
+      var selectBox = document.getElementById("selectPrice");
+      var wishlist = document.getElementById('heart-button');
+
+      setTimeout(function () {
+        wishlist.classList.add('shake');
+        setTimeout(function () {
+          wishlist.classList.remove('shake');
+        }, 300)
+      }, 600)
+
+      const quantity = document.getElementById("quantity")
+      console.log("size" + String(selectBox.selectedIndex + 1))
+      var itemId = document.getElementById("size" + String(selectBox.selectedIndex + 1)).getAttribute("data-sizeid");
+      $.ajax({
+        url: `/wishlist/${itemId}`,
+        type: 'POST',
+        headers: { 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value },
+        data: `{ "quantity": ${quantity.value} }`,
+        success: function () {
+          setTimeout(function () {
+            window.location.reload();
+          }, 750)
+        }
+      })
+    }
+
+    function buyNow(itemId) {
+      const quantity = document.getElementById("quantity")
+      $.ajax({
+        url: `/cart/${itemId}`,
+        type: 'POST',
+        headers: { 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value },
+        data: `{ "quantity": ${quantity.value} }`,
+        success: function () {
+          window.location.href = '/checkout';
+        }
+      })
+    }
+  </script>
 </body>
 
 </html>

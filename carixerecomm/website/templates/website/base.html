@@ -1,3 +1,6 @@
+<div class="chat_withus">
+    <a href="https://wa.me/8610764352" class="btn btn-lg btn-blue rounded-pill">Chat With Us!</a>
+</div>
 <div class="top_header">
     <span class="text-center">FREE SHIPPING FOR ALL ORDERS OVER $ 10 AND JUST A REMINDER, ALL OUR DELIVERIES ARECARBON
         NATURALAL</span>
@@ -27,7 +30,7 @@
                     {% if request.user.is_authenticated %}
                     <li class="nav-item me-4">
                         <a {% if request.path=='/orders' %} class="nav-link active" {% else %} class="nav-link" {% endif
-                            %} aria-current="page" href="/orders">ORDERS</a>
+                            %} aria-current="page" href="/orders">MY ORDERS</a>
                     </li>
                     {% endif %}
                     <li class="nav-item me-4">
@@ -45,9 +48,13 @@
                 <img src="/static/images/logo__1_.png" alt="" width="100">
             </a>
             <div style="display: flex; justify-content: flex-end;width: 33.33%;">
-                <button class="btn btn-outline-primary me-2 me-md-4" type="submit"><i class="fas fa-search"
-                        onclick="toggleSearchbar()"></i></button>
+                <button class="btn btn-outline-primary me-2 me-md-4" data-bs-toggle="modal" id="searchButton"
+                    data-bs-target="#searchModal" type="submit"><i class="fas fa-search"></i></button>
                 {% if request.user.is_authenticated %}
+                <button id="heart-button" class="btn btn-outline-primary me-2 me-md-4" type="submit"
+                    data-bs-toggle="modal" data-bs-target="#wishlistModal">
+                    <i class="fas fa-heart"></i>
+                </button>
                 <button id="cart-button" class="cart-bag btn btn-outline-primary me-2 me-md-4"
                     data-totalitems="{{cart|length}}" data-bs-toggle="modal" data-bs-target="#cartModal"
                     type="submit"><i class="fas fa-shopping-bag"></i></button>
@@ -142,46 +149,58 @@
     </style>
     {% if messages %}
     {% for m in messages %}
-    <div id="signup-response" class="alert alert-{{ m.tags }} m-1" style="right:-25%; width: 50%;
+    <div id="signup-response" class="alert alert-{{ m.tags }} m-1" style="width: 100%;
     text-align: center;">
-        {% if m.tag=='error' %}
         <div style="width: 100%;
         text-align: center;
-        border: solid 3px red;
+        border: solid 5px red;
         border-radius: 133px;
         color: red;
         background-color: antiquewhite;
         /* position: absolute;">
             {{ m }}
         </div>
-        {% else %}
-        <div style="width: 100%;
-        text-align: center;
-        border: solid 3px blue;
-        border-radius: 133px;
-        color: blue;
-        background-color: rgb(215, 220, 250);
-        /* position: absolute;">
-            {{ m }}
-        </div>
-        {% endif %}
     </div>
     {% endfor %}
     {% endif %}
-    <input style="display:none;" type="text" id="searchbar" value="" onchange="search(`${value}`)" />
+
 </div>
+<!-- Search modal -->
+
+<div class="modal" id="searchModal" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Search Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="searchModalbody">
+                <input class="form-control form-control-lg border-0 w-100 mt-4" type="search" placeholder="Search..."
+                    value="" onchange="search(`${value}`)" aria-label="Search">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Search modal -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
     crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script>
-    function toggleSearchbar() {
-        let searchbar = document.getElementById('searchbar');
-        if (searchbar.style.display == "block") {
-            searchbar.style = "display:none;"
-        } else {
-            searchbar.style = "display:block;"
-        }
-    }
+    $(document).ready(function () {
+        $('#searchButton').click(function () {
+            if ($('#searchButton').attr("data-bs-target") === "#searchModal") {
+                $('#searchButton').attr("data-bs-dismiss", "modal");
+                $('#searchButton').attr("data-bs-target", "");
+            }
+            else {
+                $('#searchButton').attr("data-bs-dismiss", "");
+                $('#searchButton').attr("data-bs-target", "#searchModal");
+            }
+        })
+    })
 
     function search(word) {
         window.location.href = window.location.origin + `/productlist?search=${word}`

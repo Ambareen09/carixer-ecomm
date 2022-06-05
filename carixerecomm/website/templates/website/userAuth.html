@@ -31,9 +31,11 @@
                                         <div class="input-group mb-3">
                                             <span class="input-group-text" id="basic-addon2"><i
                                                     class="fas fa-key"></i></span>
-                                            <input type="text" class="form-control form-input" placeholder="Password"
-                                                aria-label="Password" aria-describedby="basic-addon2" name="password">
-                                            <span class="input-group-text"><i class="fas fa-eye"></i></span>
+                                            <input type="password" id="pass_input" class="form-control form-input"
+                                                placeholder="Password" aria-label="Password"
+                                                aria-describedby="basic-addon2" name="password">
+                                            <span class="input-group-text"><i id="pass_eye"
+                                                    class="fas fa-eye-slash"></i></span>
                                         </div>
                                     </div>
                                     <div class="form-check mb-3">
@@ -119,10 +121,11 @@
                                         <div class="input-group mb-3">
                                             <span class="input-group-text" id="basic-addon2"><i
                                                     class="fas fa-key"></i></span>
-                                            <input type="text" class="form-control form-input"
+                                            <input type="password" id="passup_input" class="form-control form-input"
                                                 placeholder="Enter Password" aria-label="Password"
                                                 aria-describedby="basic-addon2" name="password">
-                                            <span class="input-group-text"><i class="fas fa-eye"></i></span>
+                                            <span class="input-group-text"><i id="passup_eye"
+                                                    class="fas fa-eye-slash"></i></i></span>
                                         </div>
                                     </div>
                                     <div class="form-check mb-3">
@@ -172,16 +175,17 @@
                             <div style="width: 100%; height: 100%;">
                                 <div>
                                     <h4 class="fw-bold" style="color: #000;">Forgot Password</h4>
-                                    <span class="fw-normal" style="color: #000;">Enter Email to send OTP for reset
+                                    <span class="fw-normal" style="color: #000;">Enter Phone Number to send OTP for
+                                        reset
                                         password</span>
                                 </div>
                                 <form>
                                     <div class="mb-3 mt-3">
                                         <div class="input-group mb-3">
-                                            <span class="input-group-text" id="basic-addon1"><i
-                                                    class="fas fa-envelope"></i></span>
-                                            <input type="email" class="form-control form-input" placeholder="Email ID"
-                                                aria-label="Username" aria-describedby="basic-addon1">
+                                            <span class="input-group-text" id="basic-addon1">+91</span>
+                                            <input type="number" class="form-control form-input"
+                                                placeholder="Phone Number" aria-label="Username"
+                                                aria-describedby="basic-addon1">
                                         </div>
                                     </div>
                                     <div class="mb-4"
@@ -228,3 +232,43 @@
 </div>
 
 <!-- Forgot Password modal -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#pass_eye").click(function () {
+            var passInput = $("#pass_input");
+            if (passInput.attr('type') === 'password') {
+                passInput.attr('type', 'text');
+                $("#pass_eye").attr('class', 'fas fa-eye')
+            }
+            else {
+                passInput.attr('type', 'password');
+                $("#pass_eye").attr('class', 'fas fa-eye-slash')
+            }
+        });
+        $("#passup_eye").click(function () {
+            var passInput = $("#passup_input");
+            if (passInput.attr('type') === 'password') {
+                passInput.attr('type', 'text');
+                $("#passup_eye").attr('class', 'fas fa-eye')
+            }
+            else {
+                passInput.attr('type', 'password');
+                $("#passup_eye").attr('class', 'fas fa-eye-slash')
+            }
+        });
+        $("#forgot_eye").click(function () {
+            var passInput = $("#forgot_input");
+            if (passInput.attr('type') === 'password') {
+                passInput.attr('type', 'text');
+                $("#forgot_eye").attr('class', 'fas fa-eye')
+            }
+            else {
+                passInput.attr('type', 'password');
+                $("#forgot_eye").attr('class', 'fas fa-eye-slash')
+            }
+        });
+    });
+</script>

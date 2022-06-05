@@ -1,4 +1,3 @@
-from tkinter import CASCADE
 from django.db import models
 from django.contrib import admin
 from django.core.validators import RegexValidator
@@ -12,6 +11,7 @@ STATUS = {
     ("INTRANSIT", "INTRANSIT"),
     ("ORDERED", "ORDERED"),
     ("INCART", "INCART"),
+    ("WISHLIST", "WISHLIST"),
 }
 
 phone_regex = RegexValidator(

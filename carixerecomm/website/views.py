@@ -430,7 +430,6 @@ def checkout(request):
             {
                 "cartItems": cartItem,
                 "cart": carts,
-                "wishlist": wishlist,
             },
         )
 

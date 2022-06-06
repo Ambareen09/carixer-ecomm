@@ -507,6 +507,7 @@ def productdetail(request, id):
             "suggestions": suggestions,
             "cart": cart,
             "wishlist": wishlist,
+            "product": product[0],
         },
     )
 

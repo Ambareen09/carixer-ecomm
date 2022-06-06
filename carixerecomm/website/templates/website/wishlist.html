@@ -3,7 +3,8 @@
         <div class="modal-content cart-content">
             <div class="modal-header">
                 <h5 class="modal-title blue" id="exampleModalLabel">WISHLISTS</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button id="wlclose" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    onclick="wlclose()"></button>
             </div>
             <div class="modal-body">
                 <hr>
@@ -53,6 +54,11 @@
 </div>
 
 <script>
+    function wlclose() {
+        window.location.reload()
+    }
+
+
     function cartPlusWL(itemId, price) {
         const num = document.getElementById(`number${itemId}`)
         var value = parseInt(num.value, 10);

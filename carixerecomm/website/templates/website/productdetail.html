@@ -152,11 +152,10 @@
 
                 {% for w in wishlist %}
                 {% if product.id == w.product_id %}
-                <i class="gf fas fa-heart" id="wishListButton" type="button" onclick="addToWishlist();"></i>
+                <i class="gf fas fa-heart" id="wishListButton" type="button" onclick="onClickWL();"></i>
                 {% endif %}
                 {% endfor %}
-                <i class="nf fas fa-heart" id="wishListButton" type="button"
-                  onclick="addToWishlist(); return false"></i>
+                <i class="nf fas fa-heart" id="wishListButton" type="button" onclick="onClickWL(); return false"></i>
             </span>
           </div>
           <div class="d-flex btn-outline-blue rounded mb-3" style="width: 135px">
@@ -396,6 +395,17 @@
     });
   </script>
   <script>
+    function onClickWL() {
+      var elem = document.getElementById("wishListButton")
+      if (elem.className == "gf fas fa-heart") {
+        $('#wishlistModal').modal('show');
+      }
+      else {
+        addToWishlist()
+      }
+    }
+
+
     function priceChange(p) {
       var selectBox = document.getElementById("selectPrice");
       if (p[selectBox.selectedIndex]['discount'] > 0) {
@@ -452,6 +462,7 @@
         }
       })
     }
+
     function addToWishlist() {
       var selectBox = document.getElementById("selectPrice");
       var wishlist = document.getElementById('heart-button');

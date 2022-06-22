@@ -56,6 +56,7 @@
                   <th>Price (₹)</th>
                   <th>Status</th>
                   <th>Stock</th>
+                  <th>Locations</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -77,6 +78,7 @@
                       class='badge {{ "bg-label-success" if p.status == "PUBLISHED" else "bg-label-danger"}} me-1'>{{p.status}}</span>
                   </td>
                   <td>{{p.stock}}</td>
+                  <td>{{p.location}}</td>
                   <td>
                     <div class="dropdown">
                       <button type="button" class="btn btn-success" data-bs-toggle="modal"

@@ -52,6 +52,7 @@ class Product(BaseModel):
     long_description = models.TextField(null=True)
     status = models.CharField(max_length=255)
     discount = models.FloatField(default=0)
+    location = models.CharField(max_length=255, default="All")
 
     def __str__(self):
         return str(self.title) + "|" + str(self.size)

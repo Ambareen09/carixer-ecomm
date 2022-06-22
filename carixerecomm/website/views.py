@@ -136,7 +136,6 @@ def wishlistItems(request, ids=None):
             ).values()
         )
     for o in cart:
-        print(o)
         p = Product.objects.get(id=o["product_id"])
         o["title"] = p.title
         o["image"] = str(p.image)
@@ -234,9 +233,20 @@ def productlist(request):
             "short_description",
             "long_description",
             "reviews",
+            "location",
         ],
     )
+    g = GeoIP2()
+    ip = get_client_ip(request)
+    if ip:
+        curr_location = g.country(ip)
+    else:
+        curr_location = "India"
     products = [p["fields"] for p in json.loads(products)]
+    product_to_show = []
+    for p in products:
+        if p["location"] == "All" or p["location"] == curr_location:
+            product_to_show.append(p)
     cart = cartItems(request)
     wishlist = wishlistItems(request)
     for p in products:
@@ -249,7 +259,7 @@ def productlist(request):
         request,
         "productlist.html",
         {
-            "products": products,
+            "products": product_to_show,
             "cart": cart,
             "wishlist": wishlist,
         },
@@ -460,6 +470,7 @@ def productdetail(request, id):
             "short_description",
             "long_description",
             "reviews",
+            "location",
         ],
     )
     suggestions = ProductSerializer().serialize(
@@ -473,6 +484,7 @@ def productdetail(request, id):
             "short_description",
             "long_description",
             "reviews",
+            "location",
         ],
     )
     product = [p["fields"] for p in json.loads(product)]

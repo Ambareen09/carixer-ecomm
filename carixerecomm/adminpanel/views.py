@@ -21,7 +21,7 @@ from website.models import (
     Waterless,
     DeliveryCheckpoint,
     OfferBanner,
-    Profile
+    Profile,
 )
 
 
@@ -120,6 +120,7 @@ class Products(View):
         price = request.POST.get("price")
         stock = request.POST.get("stock")
         status = request.POST.get("status", "PUBLISHED")
+        location = request.POST.get("location")
 
         if Product.objects.filter(title=title, size=size).exists():
             return HttpResponseRedirect("/panel/productlist")
@@ -131,6 +132,7 @@ class Products(View):
             size=size,
             stock=stock,
             status=status,
+            location=location,
         )
         return HttpResponseRedirect("/panel/productlist")
 
@@ -162,6 +164,7 @@ class Products(View):
                 "status",
                 "short_description",
                 "long_description",
+                "location",
             ],
         )
         products = [p["fields"] for p in json.loads(products)]
@@ -222,6 +225,7 @@ class SingleProduct(View):
             price = request.POST.get("price")
             stock = request.POST.get("stock")
             status = request.POST.get("status", "PUBLISHED")
+            location = request.POST.get("location")
 
             p.title = title
             p.long_description = product_desc
@@ -230,6 +234,7 @@ class SingleProduct(View):
             p.size = size
             p.stock = stock
             p.status = status
+            p.location = location
 
             p.save()
 
